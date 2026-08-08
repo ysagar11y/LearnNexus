@@ -1,5 +1,0 @@
-# Cloudflare Pages serves static files, so a direct hit to a client-side route
-# (/my-learning, or an invite link) would 404 before React Router ever loads.
-# Hand every unmatched path to index.html with a 200 — not a 302 — so the URL
-# the user actually requested survives for the router to read.
-/*  /index.html  200
