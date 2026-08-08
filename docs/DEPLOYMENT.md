@@ -172,6 +172,72 @@ are always there; re-deploys don't duplicate them (the seeder checks first).
 
 ---
 
+## Taking it down, and putting it back up
+
+Nothing here costs money, so taking the deployment down is about reducing
+exposure and noise, not about saving cost. Do it per layer — each is
+independent, and none of them lose your data.
+
+### Down
+
+**Cloudflare (the public URL — do this one first).** This is what strangers
+can actually reach.
+
+- Worker → **Settings** → **Domains & Routes** → disable the
+  `*.workers.dev` route. The site stops answering immediately; the project,
+  build config and variables all survive.
+- Also worth doing: **Settings → Build → Branch control**, and turn off
+  builds for the production branch. Otherwise the next `git push` quietly
+  redeploys and puts the site back online.
+- Deleting the Worker entirely also works, but you lose the build config and
+  environment variables and will re-enter them later.
+
+**Render (the API).** Service → **Settings** → **Suspend Web Service**.
+Suspending keeps the service, its URL and every environment variable —
+including the generated `JWT_SECRET`. Deleting it does not: a new service
+generates a new `JWT_SECRET`, which invalidates every existing session and
+issues a different URL, so you would have to update `VITE_API_BASE_URL` and
+rebuild the frontend.
+
+**Neon (the database).** Nothing to do. Neon's free compute auto-suspends
+after a few minutes idle and wakes on the next connection. Your data stays.
+Only delete the project if you actually want the data gone — that is
+irreversible.
+
+### Up
+
+Reverse order, because each layer depends on the one below it:
+
+1. **Render** → **Resume Web Service**. Wait for health to return:
+   ```bash
+   curl https://<service>.onrender.com/actuator/health   # {"status":"UP",...}
+   ```
+   Neon wakes by itself on the first query — no action needed.
+2. **Cloudflare** → re-enable the `workers.dev` route, and re-enable branch
+   builds if you turned them off.
+3. Only if the Render URL changed (i.e. you deleted rather than suspended):
+   update `VITE_API_BASE_URL` in Cloudflare and redeploy, then update
+   `CORS_ORIGINS` and `PUBLIC_BASE_URL` in Render to match the frontend.
+
+The first request after any downtime pays a cold start — see below.
+
+### Free-tier limits that actually bite
+
+| Limit | What it means in practice |
+|---|---|
+| **Render sleeps after ~15 min idle** | The next visitor waits for a full JVM boot. Measured on this app: **~240s from container start to "service is live"** on free-tier CPU. Wake-from-sleep is faster than a cold deploy but still tens of seconds. A friend clicking a link after a quiet afternoon may think the site is broken. |
+| Render: 750 instance-hours/month | One always-on service is ~730 hrs, so a single service fits — but it is one instance, no horizontal scaling. |
+| Render: no persistent disk on free | Anything written to local disk vanishes on restart. Fine here: state lives in Neon, and certificate PDFs are rendered on demand. |
+| Neon: 0.5 GB storage | Ample for demo data; you would notice only with real uploads. |
+| Neon: compute auto-suspends | Adds a second or two to the first query after idle, on top of Render's cold start. |
+| Cloudflare Workers: 100k requests/day | Static assets are cheap; a demo will not come close. |
+| Cloudflare: limited builds/month | Each push to a watched branch spends one. Turn off branch builds while the site is down. |
+
+Free-tier quotas and retention policies change — check each provider's
+current pricing page rather than trusting this table if something matters.
+
+---
+
 ## What's intentionally left out
 
 **Object storage (S3/R2).** Nothing in the UI uploads media — logos and
