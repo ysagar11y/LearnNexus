@@ -34,9 +34,16 @@ there is no dashboard upload path used here. If you haven't already:
 2. Add the remote and push:
 
    ```bash
-   git remote add origin git@github-personal:ysagar11y/learnnexus.git
+   git remote add origin git@github-personal:ysagar11y/LearnNexus.git
    git push -u origin main
    ```
+
+   Ignore the "quick setup" commands GitHub shows on the empty-repo page.
+   They hand you an `https://github.com/...` remote, which authenticates
+   through the credential helper rather than the SSH alias — the one path
+   that can reach the wrong account. They also start with `git init` and a
+   `README.md` commit, which is not what you want in a repo that already has
+   history.
 
 > **Use the `github-personal` host, not `github.com`.** This machine has two
 > GitHub accounts and `~/.ssh/config` picks the key by host alias:
@@ -102,8 +109,18 @@ the blueprint) — you never need to invent or paste one.
 ## 3. Frontend — Cloudflare Pages
 
 1. Sign up at **pages.cloudflare.com** (a regular Cloudflare account).
-2. **Create a project** → **Connect to Git** → pick this repo.
-3. Build settings:
+2. In the dashboard, go to **Workers & Pages**, and make sure you are on the
+   **Pages** tab before connecting the repo.
+
+   > Cloudflare's "Create an application" flow now funnels you into **Create
+   > a Worker**, which offers a *Deploy command* (`npx wrangler deploy`) and
+   > makes *Build command* optional. That is the wrong target here. This
+   > frontend is a static Vite SPA — it has no `wrangler.toml` and no Worker
+   > entrypoint, so `wrangler deploy` has nothing to deploy. You want
+   > **Pages → Connect to Git**, which asks for a build command and an output
+   > directory instead of a deploy command.
+
+3. **Connect to Git** → pick this repo. Build settings:
 
    | Setting | Value |
    |---|---|
