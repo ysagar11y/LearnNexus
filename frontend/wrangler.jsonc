@@ -3,7 +3,8 @@
   // Pages flow: this deploys the built SPA as a static-assets Worker instead.
   // There is no "main" entrypoint on purpose — nothing here runs server-side,
   // the Worker only serves ./dist.
-  "name": "learnnexus",
+  // Matches the Cloudflare project exactly — it is spelled with one "n".
+  "name": "learnexus",
   "compatibility_date": "2026-08-01",
   "assets": {
     "directory": "./dist",
