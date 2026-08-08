@@ -1,0 +1,106 @@
+<!-- @dsCard group="Components" viewport="860x340" name="Navigation" subtitle="Sidebar (tinted rail), Tabs, Breadcrumb" -->
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  .nv { display:flex; background:var(--background); font-family:var(--font-sans); height:340px; }
+  .rail { width:216px; flex-shrink:0; background:var(--sidebar);
+          border-inline-end:1px solid var(--sidebar-border); display:flex; flex-direction:column; }
+  .rail-hd { height:56px; display:flex; align-items:center; padding-inline:18px;
+             color:var(--sidebar-foreground); font-weight:600; font-size:var(--text-base);
+             letter-spacing:var(--tracking-tight); gap:9px }
+  .sec { padding:14px 10px 6px; font-size:var(--text-2xs); font-weight:600; letter-spacing:.06em;
+         text-transform:uppercase; color:var(--sidebar-muted-foreground); opacity:.85 }
+  .it { display:flex; align-items:center; gap:10px; min-height:36px; padding:8px 10px;
+        border-radius:var(--radius-md); font-size:var(--text-sm); font-weight:500;
+        color:var(--sidebar-foreground) }
+  .it-on { background:var(--sidebar-active); color:var(--sidebar-active-foreground);
+           box-shadow:var(--shadow-sm); font-weight:600 }
+  .bdg { margin-left:auto; min-width:18px; height:18px; padding-inline:5px; border-radius:99px;
+         background:var(--primary); color:var(--primary-foreground); font-size:var(--text-2xs);
+         font-weight:600; display:inline-flex; align-items:center; justify-content:center }
+  .main { flex:1; padding:22px 26px; min-width:0 }
+  .tab { position:relative; display:inline-flex; align-items:center; gap:7px; padding:11px 2px;
+         font-size:var(--text-sm); font-weight:500; color:var(--muted-foreground) }
+  .tab-on { font-weight:600; color:var(--foreground) }
+  .tab-on::after { content:''; position:absolute; left:0; right:0; bottom:-1px; height:2px;
+                   background:var(--primary); border-radius:2px 2px 0 0 }
+  .cnt { font-size:var(--text-2xs); font-weight:500; padding:1px 6px; border-radius:99px;
+         background:var(--muted); color:var(--muted-foreground) }
+  .cnt-on { background:var(--primary-soft); color:var(--primary-soft-foreground) }
+</style>
+
+<div class="nv">
+  <nav class="rail">
+    <div class="rail-hd">
+      <svg width="22" height="22" viewBox="0 0 32 32" fill="none" style="color:var(--primary)">
+        <path d="M6 24.5 L14 16.5 L20 21 L26.5 8.5" stroke="currentColor" stroke-width="2.4"
+              stroke-linecap="round" stroke-linejoin="round" opacity=".32"/>
+        <circle cx="6" cy="24.5" r="3.1" fill="currentColor" opacity=".55"/>
+        <circle cx="14" cy="16.5" r="3.1" fill="currentColor" opacity=".75"/>
+        <circle cx="26.5" cy="8.5" r="4" fill="currentColor"/></svg>
+      LearnNexus
+    </div>
+    <div style="padding:10px;display:flex;flex-direction:column;gap:2px">
+      <div class="sec">Learn</div>
+      <div class="it it-on">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1.4"
+          fill="currentColor"/><rect x="9" y="2" width="5" height="5" rx="1.4" fill="currentColor" opacity=".45"/>
+          <rect x="2" y="9" width="5" height="5" rx="1.4" fill="currentColor" opacity=".45"/>
+          <rect x="9" y="9" width="5" height="5" rx="1.4" fill="currentColor" opacity=".45"/></svg>
+        Dashboard</div>
+      <div class="it">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2.2" y="3" width="11.6" height="10"
+          rx="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M8 3v10" stroke="currentColor" stroke-width="1.5"/></svg>
+        My learning<span class="bdg">4</span></div>
+      <div class="it">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7.2" cy="7.2" r="4.6"
+          stroke="currentColor" stroke-width="1.5"/><path d="M10.6 10.6 L14 14" stroke="currentColor"
+          stroke-width="1.5" stroke-linecap="round"/></svg>
+        Catalog</div>
+      <div class="it">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6.4" r="3.4"
+          stroke="currentColor" stroke-width="1.5"/><path d="M4.6 9.6 L3.6 14 L8 12 L12.4 14 L11.4 9.6"
+          stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        Certificates</div>
+      <div class="sec">Manage</div>
+      <div class="it">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5.4" r="2.6"
+          stroke="currentColor" stroke-width="1.5"/><path d="M3.2 13c0-2.6 2.2-4 4.8-4s4.8 1.4 4.8 4"
+          stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        People</div>
+      <div class="it">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2.5 12.5V7M6.5 12.5V3.5M10.5 12.5V9M14 12.5V5.5"
+          stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        Reports</div>
+    </div>
+  </nav>
+
+  <div class="main">
+    <nav style="display:flex;align-items:center;gap:6px;font-size:var(--text-sm);margin-bottom:16px">
+      <span style="color:var(--muted-foreground)">Catalog</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" style="color:var(--border-strong)"><path d="M4.5 2.5 L8 6 L4.5 9.5"
+        fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span style="color:var(--muted-foreground)">Compliance</span>
+      <svg width="12" height="12" viewBox="0 0 12 12" style="color:var(--border-strong)"><path d="M4.5 2.5 L8 6 L4.5 9.5"
+        fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span style="font-weight:500">Data Protection Essentials</span>
+    </nav>
+
+    <h1 style="font-size:var(--text-xl);font-weight:600;letter-spacing:var(--tracking-tight);margin-bottom:18px">
+      Data Protection Essentials</h1>
+
+    <div style="display:flex;gap:24px;border-bottom:1px solid var(--border)">
+      <span class="tab tab-on">Overview</span>
+      <span class="tab">Curriculum<span class="cnt">12</span></span>
+      <span class="tab">Discussion<span class="cnt">8</span></span>
+      <span class="tab">Learners<span class="cnt">248</span></span>
+      <span class="tab" style="opacity:.45">Settings</span>
+    </div>
+
+    <p style="margin-top:18px;font-size:var(--text-sm);color:var(--muted-foreground);
+              line-height:var(--leading-normal);max-width:52ch">
+      The active tab is marked with a sliding 2px underline rather than a filled pill,
+      so labels keep their baseline and the row never shifts when selection moves.
+    </p>
+  </div>
+</div>

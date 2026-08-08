@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="description" content="LearnNexus — one learning platform, a branded portal for every organisation." />
+    <title>LearnNexus</title>
+    <!--
+      Painted before first render so a tenant's saved theme does not flash the
+      wrong palette. Kept inline and tiny for that reason.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('ln.theme');
+          if (stored === 'dark' || stored === 'light') {
+            document.documentElement.setAttribute('data-theme', stored);
+          }
+          var brand = localStorage.getItem('ln.brand');
+          if (brand) {
+            var b = JSON.parse(brand);
+            var root = document.documentElement.style;
+            if (b.h != null) root.setProperty('--brand-h', String(b.h));
+            if (b.c != null) root.setProperty('--brand-c', String(b.c));
+            if (b.a != null) root.setProperty('--accent-h', String(b.a));
+          }
+        } catch (e) {
+          /* Storage can be unavailable in private mode; defaults are fine. */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

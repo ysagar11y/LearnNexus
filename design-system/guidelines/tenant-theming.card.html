@@ -1,0 +1,89 @@
+<!-- @dsCard group="Foundations" viewport="860x340" name="Tenant theming — three dials" subtitle="Every colour derives from --brand-h / --brand-c / --accent-h" -->
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  .tt-wrap { padding: 24px; background: var(--background); font-family: var(--font-sans); }
+  .tt-lede { font-size: var(--text-sm); color: var(--muted-foreground); max-width: 62ch;
+             line-height: var(--leading-normal); margin-bottom: 20px; }
+  .tt-lede code { font-family: var(--font-mono); font-size: 0.88em; color: var(--primary);
+                  background: var(--primary-soft); padding: 1px 5px; border-radius: var(--radius-xs); }
+  .tt-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  /* Each swatch overrides only the dials; every token below re-derives. */
+  .tt-tile { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border);
+             background: var(--card); box-shadow: var(--shadow-sm); }
+  .tt-head { height: 58px; display: flex; align-items: flex-end; padding: 8px 10px;
+             background: var(--background); border-bottom: 1px solid var(--border); }
+  .tt-chip { display: flex; gap: 4px; }
+  .tt-chip i { width: 20px; height: 20px; border-radius: 5px; display: block; }
+  .tt-body { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+  .tt-btn { height: 28px; border-radius: var(--radius-md); background: var(--primary);
+            color: var(--primary-foreground); font-size: var(--text-2xs); font-weight: 600;
+            display: flex; align-items: center; justify-content: center; }
+  .tt-bar { height: 5px; border-radius: 99px; background: var(--muted); overflow: hidden; }
+  .tt-bar span { display: block; height: 100%; width: 62%; background: var(--primary); border-radius: 99px; }
+  .tt-name { font-size: var(--text-2xs); letter-spacing: 0.05em; text-transform: uppercase;
+             color: var(--muted-foreground); font-weight: 600; }
+  .tt-vals { font-family: var(--font-mono); font-size: 10px; color: var(--muted-foreground); }
+</style>
+
+<div class="tt-wrap">
+  <p class="tt-lede">
+    A tenant re-themes the entire product by writing three integers to
+    <code>tenant_branding</code>. Lightness is fixed per step, so contrast holds
+    at every hue — no palette is ever hand-checked.
+  </p>
+
+  <div class="tt-row">
+    <div class="tt-tile" style="--brand-h:232; --brand-c:0.130; --accent-h:38;">
+      <div class="tt-head"><div class="tt-chip">
+        <i style="background:var(--brand-200)"></i><i style="background:var(--brand-400)"></i>
+        <i style="background:var(--brand-600)"></i><i style="background:var(--accent-500)"></i>
+      </div></div>
+      <div class="tt-body">
+        <span class="tt-name">LearnNexus</span>
+        <span class="tt-vals">232 · 0.130 · 38</span>
+        <div class="tt-btn">Continue</div>
+        <div class="tt-bar"><span></span></div>
+      </div>
+    </div>
+
+    <div class="tt-tile" style="--brand-h:158; --brand-c:0.105; --accent-h:28;">
+      <div class="tt-head"><div class="tt-chip">
+        <i style="background:var(--brand-200)"></i><i style="background:var(--brand-400)"></i>
+        <i style="background:var(--brand-600)"></i><i style="background:var(--accent-500)"></i>
+      </div></div>
+      <div class="tt-body">
+        <span class="tt-name">Verdant Co</span>
+        <span class="tt-vals">158 · 0.105 · 28</span>
+        <div class="tt-btn">Continue</div>
+        <div class="tt-bar"><span></span></div>
+      </div>
+    </div>
+
+    <div class="tt-tile" style="--brand-h:292; --brand-c:0.125; --accent-h:64;">
+      <div class="tt-head"><div class="tt-chip">
+        <i style="background:var(--brand-200)"></i><i style="background:var(--brand-400)"></i>
+        <i style="background:var(--brand-600)"></i><i style="background:var(--accent-500)"></i>
+      </div></div>
+      <div class="tt-body">
+        <span class="tt-name">Auralis</span>
+        <span class="tt-vals">292 · 0.125 · 64</span>
+        <div class="tt-btn">Continue</div>
+        <div class="tt-bar"><span></span></div>
+      </div>
+    </div>
+
+    <div class="tt-tile" style="--brand-h:22; --brand-c:0.130; --accent-h:212;">
+      <div class="tt-head"><div class="tt-chip">
+        <i style="background:var(--brand-200)"></i><i style="background:var(--brand-400)"></i>
+        <i style="background:var(--brand-600)"></i><i style="background:var(--accent-500)"></i>
+      </div></div>
+      <div class="tt-body">
+        <span class="tt-name">Ember Group</span>
+        <span class="tt-vals">22 · 0.130 · 212</span>
+        <div class="tt-btn">Continue</div>
+        <div class="tt-bar"><span></span></div>
+      </div>
+    </div>
+  </div>
+</div>

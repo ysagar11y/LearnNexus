@@ -1,0 +1,129 @@
+/* =====================================================================
+   LearnNexus :: elevation & motion  —  dark-first
+   ---------------------------------------------------------------------
+   On a dark ground, shadows barely work: a dark blur over a dark surface
+   reads as smudge, not height. So elevation here is carried by
+   BORDER + TINT, and the shadow tokens exist mainly for things that
+   genuinely float free of the page (popovers, modals, the hero mock).
+
+   NOTE on syntax — oklch() takes `lightness chroma hue`, in that order.
+   Packing hue and chroma into one custom property and interpolating it
+   is how you silently ship red shadows: `oklch(0.45 236 0.10)` is read
+   as chroma 236 (clamped to gamut) at hue 0.1, which is vivid red. Keep
+   the three channels as separate properties so the order is explicit and
+   a mistake is visible at the definition rather than at render.
+   ===================================================================== */
+
+:root {
+  --shadow-l: 0.10;   /* lightness — near-black on dark grounds */
+  --shadow-c: 0.020;  /* chroma    — a trace, never neutral black */
+  --shadow-h: 250;    /* hue       — matches the ground, not the brand */
+
+  --shadow-xs:
+    0 1px 2px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.30);
+
+  --shadow-sm:
+    0 1px 2px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.30),
+    0 2px 6px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.22);
+
+  --shadow-md:
+    0 2px 4px  oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.32),
+    0 8px 20px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.28);
+
+  --shadow-lg:
+    0 4px 8px   oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.34),
+    0 18px 40px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.34);
+
+  --shadow-xl:
+    0 8px 16px  oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.36),
+    0 36px 72px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.44);
+
+  /* The dark-UI equivalent of a shadow: a 1px inner highlight along the
+     top edge, as if lit from above. This is what actually makes a
+     surface read as raised on a dark ground. */
+  --edge-light: inset 0 1px 0 oklch(1 0 0 / 0.06);
+  --edge-light-strong: inset 0 1px 0 oklch(1 0 0 / 0.10);
+
+  /* Pastel-blue glow, for the primary CTA and focused media only. */
+  --glow-primary: 0 0 0 1px oklch(from var(--primary) l c h / 0.35),
+                  0 8px 28px oklch(from var(--primary) l c h / 0.22);
+
+  /* Focus ring — two rings so it stays visible on any surface. */
+  --ring-offset: 0 0 0 2px var(--background);
+  --ring-focus:  var(--ring-offset), 0 0 0 4px oklch(from var(--ring) l c h / 0.55);
+
+  --shadow-inset: inset 0 1px 2px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.30);
+
+  /* ---- motion ------------------------------------------------------
+     Short. Anything past ~250ms on a control a user hits repeatedly
+     feels laggy rather than smooth; long durations are for entrances. */
+  --duration-instant: 80ms;
+  --duration-fast:    130ms;
+  --duration-base:    180ms;
+  --duration-slow:    260ms;
+  --duration-slower:  420ms;
+
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);  /* achievement moments only */
+
+  --backdrop: oklch(0.10 0.02 250 / 0.68);
+  --backdrop-blur: blur(6px);
+}
+
+/* Light theme softens the shadows — on white they must be far subtler or
+   the whole page looks dirty. */
+[data-theme="light"] {
+  --shadow-l: 0.55;
+  --shadow-c: 0.018;
+  --shadow-h: 250;
+
+  --shadow-xs: 0 1px 2px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.05);
+  --shadow-sm: 0 1px 2px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.05),
+               0 3px 8px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.06);
+  --shadow-md: 0 2px 4px  oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.05),
+               0 8px 20px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.08);
+  --shadow-lg: 0 3px 6px   oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.05),
+               0 16px 36px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.10);
+  --shadow-xl: 0 6px 12px  oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.06),
+               0 32px 68px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.13);
+
+  --edge-light: inset 0 1px 0 oklch(1 0 0 / 0.9);
+  --edge-light-strong: inset 0 1px 0 oklch(1 0 0 / 1);
+  --backdrop: oklch(0.30 0.02 250 / 0.40);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --shadow-l: 0.55;
+    --shadow-c: 0.018;
+    --shadow-h: 250;
+
+    --shadow-xs: 0 1px 2px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.05);
+    --shadow-sm: 0 1px 2px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.05),
+                 0 3px 8px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.06);
+    --shadow-md: 0 2px 4px  oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.05),
+                 0 8px 20px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.08);
+    --shadow-lg: 0 3px 6px   oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.05),
+                 0 16px 36px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.10);
+    --shadow-xl: 0 6px 12px  oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.06),
+                 0 32px 68px oklch(var(--shadow-l) var(--shadow-c) var(--shadow-h) / 0.13);
+
+    --edge-light: inset 0 1px 0 oklch(1 0 0 / 0.9);
+    --edge-light-strong: inset 0 1px 0 oklch(1 0 0 / 1);
+    --backdrop: oklch(0.30 0.02 250 / 0.40);
+  }
+}
+
+/* Respect the OS setting. Not optional — vestibular disorders are common,
+   and animation is the one thing that can make a product unusable. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 1ms;
+    --duration-fast:    1ms;
+    --duration-base:    1ms;
+    --duration-slow:    1ms;
+    --duration-slower:  1ms;
+    --ease-spring: linear;
+  }
+}

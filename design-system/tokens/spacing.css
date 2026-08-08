@@ -1,0 +1,76 @@
+/* =====================================================================
+   LearnNexus :: spacing, radius, layout
+   ---------------------------------------------------------------------
+   A 4px base grid. Every gap, pad and inset in the product is one of
+   these steps — an arbitrary 13px anywhere is a bug, not a decision.
+   ===================================================================== */
+
+:root {
+  --space-0:  0;
+  --space-1:  0.25rem;   /*  4px */
+  --space-2:  0.5rem;    /*  8px */
+  --space-3:  0.75rem;   /* 12px */
+  --space-4:  1rem;      /* 16px */
+  --space-5:  1.25rem;   /* 20px */
+  --space-6:  1.5rem;    /* 24px */
+  --space-8:  2rem;      /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+  --space-20: 5rem;      /* 80px */
+  --space-24: 6rem;      /* 96px */
+  --space-32: 8rem;      /* 128px */
+
+  /* Vertical rhythm between marketing sections. Deliberately large —
+     generous whitespace is most of what separates considered design
+     from a template. */
+  --section-y: clamp(4rem, 9vw, 8rem);
+
+  /* ---- radius ------------------------------------------------------
+     Deliberately soft. An education product used by non-technical staff
+     should not have the tight 8px corners of a developer console; the
+     larger family reads as approachable without tipping into toy-like.
+     Nested corners use the smaller step so the inner curve stays
+     concentric with the outer. */
+  --radius-xs:   0.375rem;  /*  6px — checkbox, tag                    */
+  --radius-sm:   0.5rem;    /*  8px — small controls                   */
+  --radius-md:   0.75rem;   /* 12px — inputs, buttons                  */
+  --radius-lg:   1.125rem;  /* 18px — cards, popovers                  */
+  --radius-xl:   1.5rem;    /* 24px — panels, modals                   */
+  --radius-2xl:  2rem;      /* 32px — marketing surfaces, media        */
+  --radius-full: 9999px;    /*        pills, avatars, progress rails   */
+
+  /* ---- layout ------------------------------------------------------ */
+  --container-sm:  40rem;   /*  640 — prose / auth cards               */
+  --container-md:  48rem;   /*  768 — lesson reading column            */
+  --container-lg:  64rem;   /* 1024 — narrow app views                 */
+  --container-xl:  80rem;   /* 1280 — standard app content             */
+  --container-2xl: 90rem;   /* 1440 — marketing max width              */
+
+  --sidebar-width:            17rem;    /* 272px */
+  --sidebar-width-collapsed:  4.25rem;  /*  68px */
+  --topbar-height:            3.5rem;   /*  56px */
+
+  /* Touch targets. 44px is the accessibility floor for anything a
+     finger has to hit; never shrink these for visual density. */
+  --tap-min: 2.75rem;
+
+  /* ---- breakpoints -------------------------------------------------
+     Documented here for reference; media queries can't read custom
+     properties, so these values are duplicated literally in stylesheets.
+       sm  640   md  768   lg  1024   xl  1280   2xl 1536
+     Mobile-first throughout: base styles are the phone layout. */
+  --bp-sm:  40rem;
+  --bp-md:  48rem;
+  --bp-lg:  64rem;
+  --bp-xl:  80rem;
+  --bp-2xl: 96rem;
+
+  --z-base:     0;
+  --z-sticky:   100;
+  --z-dropdown: 200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+  --z-tooltip:  600;
+}

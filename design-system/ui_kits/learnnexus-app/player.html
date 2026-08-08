@@ -1,0 +1,257 @@
+<!-- @dsCard group="UI Kits" viewport="1280x820" name="Course player" subtitle="Lesson view — video, prose measure, outline rail, progress" -->
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  .pl { display:flex; flex-direction:column; min-height:820px; background:var(--background);
+        color:var(--foreground); font-family:var(--font-sans) }
+
+  /* top bar — deliberately thin. The player is a reading/watching surface;
+     chrome competes with content and gets stripped back here. */
+  .pbar { display:flex; align-items:center; gap:14px; height:56px; padding-inline:20px;
+          background:var(--card); border-bottom:1px solid var(--border); flex-shrink:0 }
+  .back { display:flex; align-items:center; gap:7px; font-size:13.5px; font-weight:500;
+          color:var(--muted-foreground); text-decoration:none }
+  .crumb { display:flex; align-items:center; gap:6px; font-size:13px; min-width:0 }
+  .crumb span { color:var(--muted-foreground); white-space:nowrap }
+  .crumb b { font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+  .pct { margin-inline-start:auto; display:flex; align-items:center; gap:10px; flex-shrink:0 }
+  .pct-bar { width:110px; height:6px; background:var(--track); border-radius:99px; overflow:hidden }
+  .pct-bar i { display:block; height:100%; width:58%; background:var(--primary); border-radius:99px }
+
+  .pmain { flex:1; display:flex; min-height:0 }
+  @media (max-width:1000px){ .pmain { flex-direction:column } }
+
+  .stage { flex:1; min-width:0; overflow-y:auto }
+  .video { aspect-ratio:16/9; background:oklch(.20 .026 250); position:relative;
+           display:flex; align-items:center; justify-content:center }
+  .play { width:64px; height:64px; border-radius:50%; background:oklch(1 0 0 / .93);
+          display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-xl);
+          color:oklch(.24 .03 250) }
+  .vctl { position:absolute; left:0; right:0; bottom:0; padding:14px 18px;
+          background:linear-gradient(transparent, oklch(.15 .02 250 / .78)) }
+  .vbar { height:4px; background:oklch(1 0 0 / .25); border-radius:99px; overflow:hidden;
+          margin-bottom:11px }
+  .vbar i { display:block; height:100%; width:34%; background:var(--primary); border-radius:99px }
+  .vrow { display:flex; align-items:center; gap:14px; color:oklch(1 0 0 / .9); font-size:12px;
+          font-variant-numeric:tabular-nums }
+
+  .lesson { padding:32px 40px 56px; max-width:none }
+  @media (max-width:700px){ .lesson { padding:24px 20px 40px } }
+  .lesson h1 { font-size:26px; font-weight:600; letter-spacing:-.02em; line-height:1.22 }
+  .lmeta { display:flex; align-items:center; gap:10px; margin-top:10px; font-size:12.5px;
+           color:var(--muted-foreground) }
+  .sep { width:2.5px;height:2.5px;border-radius:50%;background:var(--border-strong) }
+
+  /* prose is capped at 68ch — the measure rule is enforced, not suggested */
+  .prose { max-width:68ch; margin-top:26px; font-size:17px; line-height:1.7 }
+  .prose > * + * { margin-top:1.1em }
+  .prose h2 { font-size:21px; font-weight:600; margin-top:1.9em; letter-spacing:-.014em }
+  .prose ul { padding-inline-start:1.2em; display:flex; flex-direction:column; gap:.5em }
+  .prose strong { font-weight:600 }
+  .callout { display:flex; gap:12px; padding:16px; border-radius:var(--radius-md);
+             background:var(--info-soft); border-inline-start:3px solid var(--info);
+             font-size:15px; line-height:1.6; color:var(--muted-foreground) }
+
+  .lnav { display:flex; justify-content:space-between; gap:12px; margin-top:40px;
+          padding-top:24px; border-top:1px solid var(--border); max-width:68ch }
+  .btn { display:inline-flex;align-items:center;justify-content:center;gap:7px;height:40px;
+         padding:0 18px;border-radius:var(--radius-md);font-size:14px;font-weight:500;
+         border:1px solid transparent }
+  .btn-p { background:var(--primary); color:var(--primary-foreground); box-shadow:var(--shadow-sm) }
+  .btn-o { background:var(--card); color:var(--foreground); border-color:var(--input);
+           box-shadow:var(--shadow-xs) }
+
+  /* outline rail */
+  .rail { width:330px; flex-shrink:0; background:var(--card);
+          border-inline-start:1px solid var(--border); display:flex; flex-direction:column }
+  @media (max-width:1000px){ .rail { width:auto; border-inline-start:0; border-top:1px solid var(--border) } }
+  .rail-hd { padding:18px; border-bottom:1px solid var(--border) }
+  .rail-hd h2 { font-size:15px; font-weight:600 }
+  .rail-hd p { margin-top:4px; font-size:12.5px; color:var(--muted-foreground) }
+  .rail-b { flex:1; overflow-y:auto; padding:10px }
+  .mod { padding:14px 10px 6px; font-size:11px; font-weight:600; letter-spacing:.07em;
+         text-transform:uppercase; color:var(--muted-foreground);
+         display:flex; justify-content:space-between; gap:8px }
+  .row { display:flex; align-items:center; gap:12px; width:100%; padding:9px 10px;
+         border-radius:var(--radius-md) }
+  .mk { display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;
+        border-radius:50%;flex-shrink:0;font-size:11px;font-weight:600 }
+  .rt { font-size:13.5px; font-weight:500; display:block }
+  .rm { display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted-foreground);margin-top:2px }
+</style>
+
+<div class="pl">
+  <!-- ---- top bar ---- -->
+  <header class="pbar">
+    <a href="#" class="back">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M9.5 3 L5 7.5 L9.5 12"
+        stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back</a>
+    <div style="width:1px;height:20px;background:var(--border)"></div>
+    <nav class="crumb">
+      <span>Compliance</span>
+      <svg width="11" height="11" viewBox="0 0 12 12" style="color:var(--border-strong);flex-shrink:0">
+        <path d="M4.5 2.5 L8 6 L4.5 9.5" fill="none" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <b>Data Protection Essentials</b>
+    </nav>
+    <div class="pct">
+      <span style="font-size:12.5px;color:var(--muted-foreground)">7 of 12 lessons</span>
+      <span class="pct-bar"><i></i></span>
+      <span style="font-size:13px;font-weight:600;font-variant-numeric:tabular-nums">58%</span>
+    </div>
+  </header>
+
+  <div class="pmain">
+    <!-- ---- stage ---- -->
+    <main class="stage">
+      <div class="video">
+        <div class="play">
+          <svg width="24" height="24" viewBox="0 0 24 24"><path d="M9 6 L18 12 L9 18 Z" fill="currentColor"/></svg>
+        </div>
+        <div class="vctl">
+          <div class="vbar"><i></i></div>
+          <div class="vrow">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 6 L18 12 L9 18 Z"/></svg>
+            <span>4:07 / 12:18</span>
+            <span style="margin-inline-start:auto;display:flex;gap:14px;align-items:center">
+              <span style="padding:1px 6px;border:1px solid oklch(1 0 0 / .35);border-radius:4px;
+                           font-size:11px">1.0×</span>
+              <span style="padding:1px 6px;border:1px solid oklch(1 0 0 / .35);border-radius:4px;
+                           font-size:11px">CC</span>
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 5.5V2h3.5M9.5 2H13v3.5M13 9.5V13H9.5M5.5 13H2V9.5"
+                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lesson">
+        <h1>Lawful bases explained</h1>
+        <div class="lmeta">
+          <span>Module 1 · Foundations</span><span class="sep"></span>
+          <span>Video · 12 min</span><span class="sep"></span>
+          <span>Updated 12 Jul 2026</span>
+        </div>
+
+        <div class="prose">
+          <p>Before you process anyone's personal data, you need a <strong>lawful basis</strong>.
+             There are six of them, and picking the right one is not a formality — it decides
+             which rights the person can exercise against you afterwards.</p>
+
+          <div class="callout">
+            <svg width="17" height="17" viewBox="0 0 16 16" fill="none"
+                 style="color:var(--info);flex-shrink:0;margin-top:2px">
+              <circle cx="8" cy="8" r="7" fill="currentColor" opacity=".16"/>
+              <path d="M8 7.2v4.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="8" cy="4.6" r="1" fill="currentColor"/></svg>
+            <span>You must decide your lawful basis <strong>before</strong> processing begins, and
+              document it. Switching later is only permitted in narrow circumstances.</span>
+          </div>
+
+          <h2>The six bases</h2>
+          <ul>
+            <li><strong>Consent</strong> — freely given, specific and withdrawable. Weakest in an
+                employment context, because the power imbalance undermines "freely given".</li>
+            <li><strong>Contract</strong> — processing necessary to deliver what the person asked for.</li>
+            <li><strong>Legal obligation</strong> — a statute requires it of you.</li>
+            <li><strong>Vital interests</strong> — someone's life is at stake. Rare.</li>
+            <li><strong>Public task</strong> — official authority or a task in the public interest.</li>
+            <li><strong>Legitimate interests</strong> — the most flexible, and the only one that
+                requires you to balance your interest against the person's rights.</li>
+          </ul>
+
+          <p>In practice, most internal HR processing runs on <em>contract</em> or
+             <em>legal obligation</em>, and most product analytics runs on
+             <em>legitimate interests</em> — with a documented balancing test on file.</p>
+        </div>
+
+        <div class="lnav">
+          <span class="btn btn-o">
+            <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><path d="M9.5 3 L5 7.5 L9.5 12"
+              stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Previous</span>
+          <span class="btn btn-p">Mark complete &amp; continue
+            <svg width="14" height="14" viewBox="0 0 15 15" fill="none"><path d="M5.5 3 L10 7.5 L5.5 12"
+              stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+      </div>
+    </main>
+
+    <!-- ---- outline ---- -->
+    <aside class="rail">
+      <div class="rail-hd">
+        <h2>Course content</h2>
+        <p>12 lessons · 1h 45m · 7 completed</p>
+      </div>
+      <div class="rail-b">
+        <div class="mod"><span>Module 1 · Foundations</span><span>3/4</span></div>
+
+        <div class="row">
+          <span class="mk" style="background:var(--success);color:var(--success-foreground)">
+            <svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 6.2 L5 8.2 L9 3.8" fill="none"
+              stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span style="flex:1;min-width:0"><span class="rt" style="color:var(--muted-foreground)">
+            What counts as personal data</span><span class="rm">Video · 8 min</span></span>
+        </div>
+
+        <div class="row">
+          <span class="mk" style="background:var(--success);color:var(--success-foreground)">
+            <svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 6.2 L5 8.2 L9 3.8" fill="none"
+              stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span style="flex:1;min-width:0"><span class="rt" style="color:var(--muted-foreground)">
+            Controllers vs. processors</span><span class="rm">Video · 6 min</span></span>
+        </div>
+
+        <div class="row" style="background:var(--primary-soft)">
+          <span class="mk" style="background:var(--card);color:var(--primary);
+                                  box-shadow:inset 0 0 0 2px var(--primary)">
+            <span style="width:7px;height:7px;border-radius:50%;background:var(--primary)"></span></span>
+          <span style="flex:1;min-width:0"><span class="rt" style="color:var(--primary-soft-foreground);
+            font-weight:600">Lawful bases explained</span><span class="rm">Video · 12 min</span></span>
+        </div>
+
+        <div class="row">
+          <span class="mk" style="background:var(--muted);color:var(--muted-foreground)">4</span>
+          <span style="flex:1;min-width:0"><span class="rt">Knowledge check</span>
+            <span class="rm">Quiz · 5 min</span></span>
+        </div>
+
+        <div class="mod"><span>Module 2 · In practice</span><span>4/5</span></div>
+
+        <div class="row">
+          <span class="mk" style="background:var(--success);color:var(--success-foreground)">
+            <svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 6.2 L5 8.2 L9 3.8" fill="none"
+              stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span style="flex:1;min-width:0"><span class="rt" style="color:var(--muted-foreground)">
+            Handling a subject access request</span><span class="rm">Video · 14 min</span></span>
+        </div>
+
+        <div class="row">
+          <span class="mk" style="background:var(--muted);color:var(--muted-foreground)">6</span>
+          <span style="flex:1;min-width:0"><span class="rt">Breach notification timelines</span>
+            <span class="rm">PDF · 4 min</span></span>
+        </div>
+
+        <div class="row">
+          <span class="mk" style="background:var(--muted);color:var(--muted-foreground)">7</span>
+          <span style="flex:1;min-width:0"><span class="rt">Vendor due diligence</span>
+            <span class="rm">Article · 7 min</span></span>
+        </div>
+
+        <div class="mod"><span>Module 3 · Assessment</span><span>0/1</span></div>
+
+        <div class="row" style="opacity:.55">
+          <span class="mk" style="background:var(--muted);color:var(--muted-foreground)">
+            <svg width="12" height="12" viewBox="0 0 12 12">
+              <rect x="2.8" y="5.4" width="6.4" height="4.6" rx="1.1" fill="currentColor"/>
+              <path d="M4.3 5.4V4.2a1.7 1.7 0 0 1 3.4 0v1.2" fill="none" stroke="currentColor"
+                    stroke-width="1.3"/></svg></span>
+          <span style="flex:1;min-width:0"><span class="rt">Final assessment</span>
+            <span class="rm">Exam · 20 min · 70% to pass</span></span>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

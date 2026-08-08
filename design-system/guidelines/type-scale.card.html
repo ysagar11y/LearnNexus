@@ -1,0 +1,70 @@
+<!-- @dsCard group="Foundations" viewport="860x420" name="Type scale" subtitle="Inter for UI, a transitional serif for display and headline figures" -->
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  .ty { padding: 26px; background: var(--background); font-family: var(--font-sans); }
+  .ty-row { display: grid; grid-template-columns: 92px 1fr; gap: 18px; align-items: baseline;
+            padding: 9px 0; border-bottom: 1px solid var(--border); }
+  .ty-row:last-child { border-bottom: 0; }
+  .ty-meta { font-family: var(--font-mono); font-size: 10px; color: var(--muted-foreground); }
+  .ty-note { margin-top: 18px; font-size: var(--text-xs); color: var(--muted-foreground);
+             max-width: 60ch; line-height: var(--leading-normal); }
+</style>
+
+<div class="ty">
+  <div class="ty-row">
+    <span class="ty-meta">display / 60</span>
+    <span style="font-family:var(--font-display); font-size:var(--text-5xl); font-weight:400;
+                 line-height:var(--leading-tight); letter-spacing:var(--tracking-display);">
+      Learning that sticks
+    </span>
+  </div>
+  <div class="ty-row">
+    <span class="ty-meta">3xl / 38</span>
+    <span style="font-size:var(--text-3xl); font-weight:600; letter-spacing:var(--tracking-tight);">
+      Built for the whole org
+    </span>
+  </div>
+  <div class="ty-row">
+    <span class="ty-meta">xl / 24</span>
+    <span style="font-size:var(--text-xl); font-weight:600; letter-spacing:var(--tracking-tight);">
+      Page title
+    </span>
+  </div>
+  <div class="ty-row">
+    <span class="ty-meta">lg / 20</span>
+    <span style="font-size:var(--text-lg); font-weight:600;">Card heading</span>
+  </div>
+  <div class="ty-row">
+    <span class="ty-meta">md / 17</span>
+    <span style="font-size:var(--text-md); line-height:var(--leading-relaxed);">
+      Lesson prose, set at 1.7 leading and capped at 68 characters.
+    </span>
+  </div>
+  <div class="ty-row">
+    <span class="ty-meta">base / 15</span>
+    <span style="font-size:var(--text-base);">Default UI body text</span>
+  </div>
+  <div class="ty-row">
+    <span class="ty-meta">sm / 13</span>
+    <span style="font-size:var(--text-sm); color:var(--muted-foreground);">
+      Dense UI — table cells, sidebar, form labels
+    </span>
+  </div>
+  <div class="ty-row">
+    <span class="ty-meta">xs / 12</span>
+    <span style="font-size:var(--text-xs); color:var(--muted-foreground);">
+      Badges, timestamps, captions
+    </span>
+  </div>
+  <div class="ty-row">
+    <span class="ty-meta">eyebrow</span>
+    <span class="ln-eyebrow">Overline label</span>
+  </div>
+
+  <p class="ty-note">
+    The serif appears in exactly two places: marketing display headings and the
+    single figure on a stat tile. Everywhere else is Inter. Used sparingly it
+    signals “education”; used broadly it turns into costume.
+  </p>
+</div>

@@ -1,0 +1,46 @@
+<meta charset="utf-8">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .tb { width:100%; height:100%; min-height:420px; display:flex; flex-direction:column;
+        justify-content:space-between; padding:44px; background:var(--background);
+        font-family:var(--font-sans); }
+  .tb-mark { display:flex; align-items:center; gap:12px; color:var(--foreground); }
+  .tb-h { font-family:var(--font-display); font-weight:400; font-size:52px; line-height:1.05;
+          letter-spacing:-.028em; margin-top:auto; }
+  .tb-h em { font-style:normal; color:var(--primary); }
+  .tb-sw { display:flex; gap:8px; margin-top:28px; }
+  .tb-sw i { width:46px; height:46px; border-radius:12px; display:block; }
+  .tb-meta { display:flex; gap:22px; margin-top:26px; font-size:13px;
+             color:var(--muted-foreground); flex-wrap:wrap; }
+  .tb-meta b { color:var(--foreground); font-weight:600; }
+</style>
+
+<div class="tb ln-wash">
+  <div class="tb-mark">
+    <svg width="34" height="34" viewBox="0 0 32 32" fill="none" style="color:var(--primary)">
+      <path d="M6 24.5 L14 16.5 L20 21 L26.5 8.5" stroke="currentColor" stroke-width="2.4"
+            stroke-linecap="round" stroke-linejoin="round" opacity=".32"/>
+      <circle cx="6" cy="24.5" r="3.1" fill="currentColor" opacity=".55"/>
+      <circle cx="14" cy="16.5" r="3.1" fill="currentColor" opacity=".75"/>
+      <circle cx="26.5" cy="8.5" r="4" fill="currentColor"/></svg>
+    <span style="font-size:21px;font-weight:600;letter-spacing:-.02em">LearnNexus</span>
+  </div>
+
+  <div>
+    <h1 class="tb-h">A pastel-blue system<br>that <em>re-themes itself</em>.</h1>
+    <div class="tb-sw">
+      <i style="background:var(--brand-200)"></i>
+      <i style="background:var(--brand-400)"></i>
+      <i style="background:var(--brand-600)"></i>
+      <i style="background:var(--brand-800)"></i>
+      <i style="background:var(--accent-400)"></i>
+      <i style="background:var(--success)"></i>
+    </div>
+    <div class="tb-meta">
+      <span><b>20</b> components</span>
+      <span><b>3</b> UI kits</span>
+      <span><b>OKLCH</b> derived tokens</span>
+      <span><b>3</b> dials to re-theme</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,384 @@
+<!-- @dsCard group="UI Kits" viewport="1320x880" name="Admin console" subtitle="Course management — filters, bulk select, data table, reporting" -->
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  .ad { display:flex; min-height:880px; background:var(--background); color:var(--foreground);
+        font-family:var(--font-sans) }
+
+  .rail { width:236px; flex-shrink:0; background:var(--sidebar);
+          border-inline-end:1px solid var(--sidebar-border); display:flex; flex-direction:column }
+  @media (max-width:960px){ .rail { display:none } }
+  .rail-hd { height:58px; display:flex; align-items:center; gap:9px; padding-inline:19px;
+             font-size:15.5px; font-weight:600; letter-spacing:-.02em; color:var(--sidebar-foreground) }
+  .tenant { margin:0 12px 8px; padding:9px 11px; border-radius:var(--radius-md);
+            background:oklch(from var(--sidebar-active) l c h / .55); display:flex;
+            align-items:center; gap:9px }
+  .rail-b { flex:1; padding:8px 12px; display:flex; flex-direction:column; gap:2px; overflow-y:auto }
+  .sec { padding:15px 10px 6px; font-size:11px; font-weight:600; letter-spacing:.07em;
+         text-transform:uppercase; color:var(--sidebar-muted-foreground); opacity:.85 }
+  .it { display:flex; align-items:center; gap:11px; min-height:36px; padding:8px 11px;
+        border-radius:var(--radius-md); font-size:13.5px; font-weight:500;
+        color:var(--sidebar-foreground) }
+  .it.on { background:var(--sidebar-active); color:var(--sidebar-active-foreground);
+           box-shadow:var(--shadow-sm); font-weight:600 }
+
+  .main { flex:1; min-width:0; display:flex; flex-direction:column }
+  .top { display:flex; align-items:center; gap:14px; padding:0 26px; height:58px;
+         background:var(--card); border-bottom:1px solid var(--border) }
+  .btn { display:inline-flex;align-items:center;justify-content:center;gap:7px;height:34px;
+         padding:0 14px;border-radius:var(--radius-md);font-size:13px;font-weight:500;
+         border:1px solid transparent;white-space:nowrap }
+  .btn-p { background:var(--primary); color:var(--primary-foreground); box-shadow:var(--shadow-xs) }
+  .btn-o { background:var(--card); color:var(--foreground); border-color:var(--input);
+           box-shadow:var(--shadow-xs) }
+  .btn-g { background:transparent; color:var(--muted-foreground) }
+
+  .body { flex:1; padding:26px; overflow-y:auto }
+  .head { display:flex; align-items:flex-start; gap:16px; flex-wrap:wrap; margin-bottom:22px }
+  h1 { font-size:23px; font-weight:600; letter-spacing:-.02em }
+  .sub { margin-top:5px; font-size:13.5px; color:var(--muted-foreground) }
+
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(178px,1fr)); gap:13px;
+           margin-bottom:22px }
+  .tile { padding:16px; background:var(--card); border:1px solid var(--border);
+          border-radius:var(--radius-lg); box-shadow:var(--shadow-sm) }
+  .tile span { font-size:12px; color:var(--muted-foreground); display:block }
+  .tile b { font-family:var(--font-display); font-weight:400; font-size:28px; letter-spacing:-.028em;
+            line-height:1; display:block; margin-top:8px; font-variant-numeric:tabular-nums }
+  .trend { display:inline-flex; align-items:center; gap:3px; font-size:11.5px; font-weight:500;
+           margin-top:8px }
+
+  /* toolbar */
+  .tools { display:flex; align-items:center; gap:9px; flex-wrap:wrap; margin-bottom:0;
+           padding:13px 16px; background:var(--card); border:1px solid var(--border);
+           border-bottom:0; border-radius:var(--radius-lg) var(--radius-lg) 0 0 }
+  .fld { display:flex; align-items:center; gap:8px; height:34px; padding-inline:11px;
+         background:var(--background); border:1px solid var(--input); border-radius:var(--radius-md);
+         font-size:13px; color:var(--muted-foreground) }
+  .chip { display:inline-flex; align-items:center; gap:6px; height:28px; padding-inline:10px;
+          border-radius:99px; background:var(--primary-soft); color:var(--primary-soft-foreground);
+          font-size:12.5px; font-weight:500 }
+
+  /* bulk bar — replaces the toolbar when rows are selected */
+  .bulk { display:flex; align-items:center; gap:10px; padding:13px 16px;
+          background:var(--primary-soft); border:1px solid var(--primary);
+          border-bottom:0; border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+          font-size:13px; color:var(--primary-soft-foreground); font-weight:500 }
+
+  /* Wide content scrolls inside its own container — the page body must
+     never scroll horizontally. The table keeps a min-width so columns
+     stay legible and scroll, rather than compressing into unreadable
+     slivers on a phone. */
+  .tscroll { overflow-x:auto; -webkit-overflow-scrolling:touch;
+             border:1px solid var(--border); border-top:0;
+             border-radius:0 0 var(--radius-lg) var(--radius-lg) }
+  table { width:100%; min-width:880px; border-collapse:collapse; background:var(--card) }
+  th { text-align:start; font-size:11.5px; font-weight:600; letter-spacing:.05em;
+       text-transform:uppercase; color:var(--muted-foreground); padding:11px 16px;
+       background:var(--raised); border-bottom:1px solid var(--border); white-space:nowrap }
+  td { padding:13px 16px; font-size:13.5px; border-bottom:1px solid var(--border);
+       vertical-align:middle }
+  tr:last-child td { border-bottom:0 }
+  tr.sel td { background:oklch(from var(--primary-soft) l c h / .45) }
+  .cb { width:17px;height:17px;border-radius:var(--radius-xs);border:1px solid var(--input);
+        background:var(--card);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0 }
+  .cb.on { background:var(--primary); border-color:var(--primary); color:var(--primary-foreground) }
+  .ct { display:flex; align-items:center; gap:11px; min-width:0 }
+  .cthumb { width:38px;height:26px;border-radius:5px;flex-shrink:0 }
+  .cname { font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+  .ccode { font-family:var(--font-mono); font-size:11px; color:var(--muted-foreground) }
+  .bdg { display:inline-flex; align-items:center; gap:5px; height:21px; padding:0 8px;
+         border-radius:99px; font-size:11.5px; font-weight:500 }
+  .bdg i { width:5px;height:5px;border-radius:50%;background:currentColor }
+  .mini { width:74px; height:5px; background:var(--track); border-radius:99px; overflow:hidden;
+          display:inline-block; vertical-align:middle; margin-inline-end:8px }
+  .mini i { display:block; height:100%; background:var(--primary); border-radius:99px }
+  .num { font-variant-numeric:tabular-nums }
+  .kebab { width:28px;height:28px;border-radius:var(--radius-sm);display:inline-flex;
+           align-items:center;justify-content:center;color:var(--muted-foreground) }
+
+  .pag { display:flex; align-items:center; justify-content:space-between; gap:12px;
+         margin-top:16px; font-size:13px; color:var(--muted-foreground); flex-wrap:wrap }
+  .pgs { display:flex; gap:4px }
+  .pg { min-width:30px;height:30px;border-radius:var(--radius-sm);display:inline-flex;
+        align-items:center;justify-content:center;font-size:13px;border:1px solid var(--border);
+        background:var(--card) }
+  .pg.on { background:var(--primary); color:var(--primary-foreground); border-color:var(--primary);
+           font-weight:600 }
+
+  /* Small screens: the rail is already hidden below 960; tighten padding
+     and let the header actions wrap instead of squeezing the title. */
+  @media (max-width:700px){
+    .body { padding:18px 14px }
+    .top { padding:0 14px; gap:10px }
+    .head { gap:12px }
+    h1 { font-size:20px }
+    .bulk { flex-wrap:wrap; gap:8px }
+    .bulk .btn { flex:1 1 auto }
+  }
+</style>
+
+<div class="ad">
+  <!-- ---- rail ---- -->
+  <nav class="rail">
+    <div class="rail-hd">
+      <svg width="22" height="22" viewBox="0 0 32 32" fill="none" style="color:var(--primary)">
+        <path d="M6 24.5 L14 16.5 L20 21 L26.5 8.5" stroke="currentColor" stroke-width="2.4"
+              stroke-linecap="round" stroke-linejoin="round" opacity=".32"/>
+        <circle cx="6" cy="24.5" r="3.1" fill="currentColor" opacity=".55"/>
+        <circle cx="14" cy="16.5" r="3.1" fill="currentColor" opacity=".75"/>
+        <circle cx="26.5" cy="8.5" r="4" fill="currentColor"/></svg>
+      LearnNexus
+    </div>
+    <div class="tenant">
+      <span style="width:22px;height:22px;border-radius:5px;background:var(--primary);
+                   color:var(--primary-foreground);display:flex;align-items:center;
+                   justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">M</span>
+      <span style="min-width:0;flex:1">
+        <span style="display:block;font-size:12.5px;font-weight:600;white-space:nowrap;
+                     overflow:hidden;text-overflow:ellipsis;color:var(--sidebar-foreground)">
+          Meridian Health</span>
+        <span style="display:block;font-size:10.5px;color:var(--sidebar-muted-foreground)">Pro · 3,400 seats</span>
+      </span>
+    </div>
+    <div class="rail-b">
+      <div class="sec">Overview</div>
+      <div class="it">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5"
+          rx="1.4" fill="currentColor"/><rect x="9" y="2" width="5" height="5" rx="1.4" fill="currentColor" opacity=".45"/>
+          <rect x="2" y="9" width="5" height="5" rx="1.4" fill="currentColor" opacity=".45"/>
+          <rect x="9" y="9" width="5" height="5" rx="1.4" fill="currentColor" opacity=".45"/></svg>
+        Dashboard</div>
+      <div class="it">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2.5 12.5V7M6.5 12.5V3.5M10.5 12.5V9M14 12.5V5.5"
+          stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        Reports</div>
+
+      <div class="sec">Content</div>
+      <div class="it on">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2.2" y="3" width="11.6"
+          height="10" rx="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M8 3v10"
+          stroke="currentColor" stroke-width="1.5"/></svg>
+        Courses</div>
+      <div class="it">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 4.5h10M3 8h10M3 11.5h6"
+          stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        Learning paths</div>
+      <div class="it">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.6"
+          stroke="currentColor" stroke-width="1.5"/><path d="M8 5v3.4l2.2 1.3" stroke="currentColor"
+          stroke-width="1.5" stroke-linecap="round"/></svg>
+        Assessments</div>
+      <div class="it">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2.4" y="3.4" width="11.2"
+          height="9.2" rx="1.6" stroke="currentColor" stroke-width="1.5"/></svg>
+        Media library</div>
+
+      <div class="sec">People</div>
+      <div class="it">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5.4" r="2.6"
+          stroke="currentColor" stroke-width="1.5"/><path d="M3.2 13c0-2.6 2.2-4 4.8-4s4.8 1.4 4.8 4"
+          stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Users</div>
+      <div class="it">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2.5" y="2.5" width="4.5"
+          height="4.5" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="9" width="4.5"
+          height="4.5" rx="1" stroke="currentColor" stroke-width="1.4"/><path d="M4.75 7v3.5h4.25"
+          stroke="currentColor" stroke-width="1.4"/></svg>
+        Org units</div>
+
+      <div class="sec">Settings</div>
+      <div class="it">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.2"
+          stroke="currentColor" stroke-width="1.5"/><path d="M8 1.8v1.6M8 12.6v1.6M14.2 8h-1.6M3.4 8H1.8"
+          stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Branding &amp; theme</div>
+      <div class="it">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2.6" y="6.6" width="10.8"
+          height="7" rx="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M5.2 6.6V4.6a2.8 2.8 0 0 1 5.6 0v2"
+          stroke="currentColor" stroke-width="1.5"/></svg>
+        Security</div>
+    </div>
+  </nav>
+
+  <!-- ---- main ---- -->
+  <div class="main">
+    <header class="top">
+      <div class="fld" style="max-width:300px;flex:1">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7.2" cy="7.2" r="4.6"
+          stroke="currentColor" stroke-width="1.5"/><path d="M10.6 10.6 L14 14" stroke="currentColor"
+          stroke-width="1.5" stroke-linecap="round"/></svg>
+        Search everything
+        <span style="margin-inline-start:auto;font-family:var(--font-mono);font-size:10.5px;
+                     padding:2px 5px;border-radius:4px;background:var(--muted)">⌘K</span>
+      </div>
+      <div style="margin-inline-start:auto;display:flex;align-items:center;gap:9px">
+        <span class="btn btn-g">Docs</span>
+        <span style="width:30px;height:30px;border-radius:50%;background:oklch(.88 .055 196);
+                     color:oklch(.34 .09 196);display:flex;align-items:center;justify-content:center;
+                     font-size:11.5px;font-weight:600">RD</span>
+      </div>
+    </header>
+
+    <div class="body">
+      <div class="head">
+        <div style="flex:1;min-width:0">
+          <h1>Courses</h1>
+          <p class="sub">48 courses · 12,940 enrollments across your organisation</p>
+        </div>
+        <div style="display:flex;gap:9px">
+          <span class="btn btn-o">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.8v7M4.2 6.2 7 9 9.8 6.2M2 11.6h10"
+              stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Export</span>
+          <span class="btn btn-p">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2.6v8.8M2.6 7h8.8"
+              stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            New course</span>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="tile"><span>Published</span><b>34</b>
+          <span class="trend" style="color:var(--success)">
+            <svg width="9" height="9" viewBox="0 0 10 10"><path d="M5 2 L8.5 7 L1.5 7 Z" fill="currentColor"/></svg>
+            4 this month</span></div>
+        <div class="tile"><span>Avg. completion</span><b>87%</b>
+          <span class="trend" style="color:var(--success)">
+            <svg width="9" height="9" viewBox="0 0 10 10"><path d="M5 2 L8.5 7 L1.5 7 Z" fill="currentColor"/></svg>
+            5% vs. last quarter</span></div>
+        <div class="tile"><span>Overdue enrollments</span><b style="color:var(--destructive)">213</b>
+          <span class="trend" style="color:var(--destructive)">
+            <svg width="9" height="9" viewBox="0 0 10 10"><path d="M5 2 L8.5 7 L1.5 7 Z" fill="currentColor"/></svg>
+            18 since Monday</span></div>
+        <div class="tile"><span>Awaiting grading</span><b>27</b>
+          <span class="trend" style="color:var(--muted-foreground)">across 6 assessments</span></div>
+      </div>
+
+      <!-- bulk-select bar shown in place of the filter toolbar -->
+      <div class="bulk">
+        <span class="cb on" style="border-color:transparent">
+          <svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 5h6" stroke="currentColor"
+            stroke-width="1.9" stroke-linecap="round"/></svg></span>
+        3 courses selected
+        <span style="margin-inline-start:auto;display:flex;gap:8px">
+          <span class="btn btn-o">Assign to org unit</span>
+          <span class="btn btn-o">Change status</span>
+          <span class="btn btn-o" style="color:var(--destructive);border-color:var(--destructive)">Archive</span>
+        </span>
+      </div>
+
+      <div class="tscroll">
+      <table>
+        <thead><tr>
+          <th style="width:38px"></th>
+          <th>Course</th><th>Status</th><th>Category</th>
+          <th>Enrolled</th><th>Completion</th><th>Owner</th><th style="width:44px"></th>
+        </tr></thead>
+        <tbody>
+          <tr class="sel">
+            <td><span class="cb on"><svg width="11" height="11" viewBox="0 0 11 11"><path d="M2 5.6 L4.3 8 L9 3"
+              fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+            <td><span class="ct"><span class="cthumb" style="background:linear-gradient(148deg,oklch(.88 .055 214),oklch(.93 .035 254))"></span>
+              <span style="min-width:0"><span class="cname">Data Protection Essentials</span>
+              <span class="ccode">CMP-001 · v3</span></span></span></td>
+            <td><span class="bdg" style="background:var(--success-soft);color:var(--success)"><i></i>Published</span></td>
+            <td style="color:var(--muted-foreground)">Compliance</td>
+            <td class="num">2,481</td>
+            <td><span class="mini"><i style="width:92%"></i></span><span class="num" style="font-size:12.5px">92%</span></td>
+            <td style="color:var(--muted-foreground)">A. Kapoor</td>
+            <td><span class="kebab"><svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="3" r="1.3"
+              fill="currentColor"/><circle cx="7" cy="7" r="1.3" fill="currentColor"/><circle cx="7" cy="11" r="1.3"
+              fill="currentColor"/></svg></span></td>
+          </tr>
+
+          <tr class="sel">
+            <td><span class="cb on"><svg width="11" height="11" viewBox="0 0 11 11"><path d="M2 5.6 L4.3 8 L9 3"
+              fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+            <td><span class="ct"><span class="cthumb" style="background:linear-gradient(148deg,oklch(.88 .055 132),oklch(.93 .035 172))"></span>
+              <span style="min-width:0"><span class="cname">Coaching Conversations</span>
+              <span class="ccode">LDR-014 · v1</span></span></span></td>
+            <td><span class="bdg" style="background:var(--success-soft);color:var(--success)"><i></i>Published</span></td>
+            <td style="color:var(--muted-foreground)">Leadership</td>
+            <td class="num">864</td>
+            <td><span class="mini"><i style="width:62%"></i></span><span class="num" style="font-size:12.5px">62%</span></td>
+            <td style="color:var(--muted-foreground)">R. Desai</td>
+            <td><span class="kebab"><svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="3" r="1.3"
+              fill="currentColor"/><circle cx="7" cy="7" r="1.3" fill="currentColor"/><circle cx="7" cy="11" r="1.3"
+              fill="currentColor"/></svg></span></td>
+          </tr>
+
+          <tr class="sel">
+            <td><span class="cb on"><svg width="11" height="11" viewBox="0 0 11 11"><path d="M2 5.6 L4.3 8 L9 3"
+              fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span></td>
+            <td><span class="ct"><span class="cthumb" style="background:linear-gradient(148deg,oklch(.88 .055 312),oklch(.93 .035 352))"></span>
+              <span style="min-width:0"><span class="cname">Incident Response Drill</span>
+              <span class="ccode">SEC-007 · v2</span></span></span></td>
+            <td><span class="bdg" style="background:var(--warning-soft);color:var(--warning)"><i></i>In review</span></td>
+            <td style="color:var(--muted-foreground)">Security</td>
+            <td class="num">1,209</td>
+            <td><span class="mini"><i style="width:34%;background:var(--warning)"></i></span><span class="num" style="font-size:12.5px">34%</span></td>
+            <td style="color:var(--muted-foreground)">S. Nair</td>
+            <td><span class="kebab"><svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="3" r="1.3"
+              fill="currentColor"/><circle cx="7" cy="7" r="1.3" fill="currentColor"/><circle cx="7" cy="11" r="1.3"
+              fill="currentColor"/></svg></span></td>
+          </tr>
+
+          <tr>
+            <td><span class="cb"></span></td>
+            <td><span class="ct"><span class="cthumb" style="background:linear-gradient(148deg,oklch(.88 .055 46),oklch(.93 .035 86))"></span>
+              <span style="min-width:0"><span class="cname">Onboarding Fundamentals</span>
+              <span class="ccode">ONB-001 · v5</span></span></span></td>
+            <td><span class="bdg" style="background:var(--success-soft);color:var(--success)"><i></i>Published</span></td>
+            <td style="color:var(--muted-foreground)">Onboarding</td>
+            <td class="num">3,392</td>
+            <td><span class="mini"><i style="width:98%;background:var(--success)"></i></span><span class="num" style="font-size:12.5px">98%</span></td>
+            <td style="color:var(--muted-foreground)">R. Desai</td>
+            <td><span class="kebab"><svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="3" r="1.3"
+              fill="currentColor"/><circle cx="7" cy="7" r="1.3" fill="currentColor"/><circle cx="7" cy="11" r="1.3"
+              fill="currentColor"/></svg></span></td>
+          </tr>
+
+          <tr>
+            <td><span class="cb"></span></td>
+            <td><span class="ct"><span class="cthumb" style="background:linear-gradient(148deg,oklch(.88 .055 176),oklch(.93 .035 216))"></span>
+              <span style="min-width:0"><span class="cname">Phishing &amp; Social Engineering</span>
+              <span class="ccode">SEC-011 · v1</span></span></span></td>
+            <td><span class="bdg" style="background:var(--muted);color:var(--muted-foreground)"><i></i>Draft</span></td>
+            <td style="color:var(--muted-foreground)">Security</td>
+            <td class="num">—</td>
+            <td style="color:var(--muted-foreground);font-size:12.5px">Not published</td>
+            <td style="color:var(--muted-foreground)">S. Nair</td>
+            <td><span class="kebab"><svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="3" r="1.3"
+              fill="currentColor"/><circle cx="7" cy="7" r="1.3" fill="currentColor"/><circle cx="7" cy="11" r="1.3"
+              fill="currentColor"/></svg></span></td>
+          </tr>
+
+          <tr>
+            <td><span class="cb"></span></td>
+            <td><span class="ct"><span class="cthumb" style="background:linear-gradient(148deg,oklch(.88 .055 286),oklch(.93 .035 326))"></span>
+              <span style="min-width:0"><span class="cname">Writing Better Specs</span>
+              <span class="ccode">PRD-003 · v2</span></span></span></td>
+            <td><span class="bdg" style="background:var(--muted);color:var(--muted-foreground)"><i></i>Archived</span></td>
+            <td style="color:var(--muted-foreground)">Product</td>
+            <td class="num">412</td>
+            <td><span class="mini"><i style="width:76%"></i></span><span class="num" style="font-size:12.5px">76%</span></td>
+            <td style="color:var(--muted-foreground)">A. Kapoor</td>
+            <td><span class="kebab"><svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="3" r="1.3"
+              fill="currentColor"/><circle cx="7" cy="7" r="1.3" fill="currentColor"/><circle cx="7" cy="11" r="1.3"
+              fill="currentColor"/></svg></span></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div class="pag">
+        <span>Showing 1–6 of 48 courses</span>
+        <span class="pgs">
+          <span class="pg">‹</span><span class="pg on">1</span><span class="pg">2</span>
+          <span class="pg">3</span><span class="pg">…</span><span class="pg">8</span><span class="pg">›</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

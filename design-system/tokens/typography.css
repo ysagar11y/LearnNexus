@@ -1,0 +1,85 @@
+/* =====================================================================
+   LearnNexus :: typography
+   ---------------------------------------------------------------------
+   Two families, used for different jobs:
+
+     --font-sans     the entire product UI.
+     --font-display  marketing headlines, the learner greeting, and the
+                     one big number on a stat tile. Nowhere else.
+
+   Plus Jakarta Sans rather than Inter. Inter is the correct neutral
+   default and reads as exactly that — every other B2B product uses it.
+   Jakarta keeps the same UI discipline (wide apertures, unambiguous
+   1/l/I, tall x-height at 15px) while having enough of its own voice
+   that the product does not look defaulted.
+
+   Fraunces carries the display role. It is a variable serif with an
+   optical-size axis, so the greeting at 30px and a marketing headline
+   at 76px are drawn with different contrast rather than the same
+   outline scaled — which is what stops large type looking thin and
+   small type looking clotted.
+
+   Both are variable fonts, self-hosted via @fontsource, and both stacks
+   degrade to fonts already on the machine — nothing here depends on a
+   webfont request that a strict CSP would block.
+   ===================================================================== */
+
+:root {
+  --font-sans: "Plus Jakarta Sans Variable", "Plus Jakarta Sans",
+               -apple-system, BlinkMacSystemFont, "Segoe UI",
+               Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Fraunces Variable", "Fraunces", "Iowan Old Style",
+                  "Palatino Linotype", Palatino, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono",
+               Menlo, Consolas, monospace;
+
+  /* Fraunces ships a "soft" axis and a wonk axis; both are dialled most of
+     the way down. A little softness reads as considered, a lot reads as
+     a novelty face, and this type carries certificate names and course
+     titles that have to stay credible. */
+  --font-display-variation: "SOFT" 30, "WONK" 0;
+
+  /* ---- size scale --------------------------------------------------
+     Ratio ~1.2 (minor third) through the UI range, opening to ~1.28 at
+     display sizes where bigger jumps are needed to register as a jump.
+     Every step is paired with an explicit line-height: leading is not
+     something to leave to the browser. */
+  --text-2xs:  0.6875rem;  /* 11px — table meta, keyboard hints        */
+  --text-xs:   0.75rem;    /* 12px — badges, timestamps, captions      */
+  --text-sm:   0.8125rem;  /* 13px — dense UI, table cells, sidebar    */
+  --text-base: 0.9375rem;  /* 15px — default body. 15 not 16: reads    */
+                           /*        better at typical app density     */
+  --text-md:   1.0625rem;  /* 17px — long-form lesson prose            */
+  --text-lg:   1.25rem;    /* 20px — card titles, section headings     */
+  --text-xl:   1.5rem;     /* 24px — page titles                       */
+  --text-2xl:  1.875rem;   /* 30px — dashboard greeting                */
+  --text-3xl:  2.375rem;   /* 38px — marketing sub-headlines           */
+  --text-4xl:  3rem;       /* 48px — marketing headline (mobile)       */
+  --text-5xl:  3.75rem;    /* 60px — marketing headline (desktop)      */
+  --text-6xl:  4.75rem;    /* 76px — hero display                      */
+
+  --leading-none:    1;
+  --leading-tight:   1.15;   /* display sizes                          */
+  --leading-snug:    1.3;    /* headings                               */
+  --leading-normal:  1.5;    /* UI body                                */
+  --leading-relaxed: 1.7;    /* lesson prose — the one place it earns  */
+                             /* its keep, long reading sessions        */
+
+  --font-weight-normal:   400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+
+  /* Optical tracking. Large type needs negative tracking or it looks
+     loose; small caps-y type needs positive or it looks cramped. */
+  --tracking-display: -0.022em;
+  --tracking-tight:   -0.014em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.02em;
+  --tracking-caps:    0.06em;  /* eyebrow / overline labels            */
+
+  /* Measure. Prose that runs wider than ~68ch costs comprehension;
+     this is enforced on lesson content, not merely suggested. */
+  --measure-prose: 68ch;
+  --measure-narrow: 46ch;
+}

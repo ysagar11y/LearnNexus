@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title th:text="${heading}">Notification</title>
+</head>
+<!--
+  Table layout and inline styles are deliberate: Outlook and several webmail
+  clients still strip <style> blocks and ignore flexbox.
+-->
+<body style="margin:0; padding:0; background:#f4f4f2; -webkit-font-smoothing:antialiased;">
+
+<div style="display:none; max-height:0; overflow:hidden; opacity:0;"
+     th:text="${body}">Preview text</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="background:#f4f4f2; padding:40px 16px;">
+  <tr>
+    <td align="center">
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+             style="max-width:560px; background:#ffffff; border:1px solid #e5e3de; border-radius:16px; overflow:hidden;">
+
+        <!-- Brand bar -->
+        <tr>
+          <td th:style="'height:4px; line-height:4px; font-size:0; background:hsl(' + ${brandHue} + ', 62%, 52%);'"
+              style="height:4px; line-height:4px; font-size:0; background:#6d5ce7;">&nbsp;</td>
+        </tr>
+
+        <tr>
+          <td style="padding:36px 40px 8px 40px;">
+            <img th:if="${logoUrl}" th:src="${logoUrl}" th:alt="${tenantName}"
+                 style="max-height:32px; max-width:180px; display:block; border:0;">
+            <div th:unless="${logoUrl}"
+                 th:text="${tenantName}"
+                 style="font-family:Georgia,'Times New Roman',serif; font-size:19px; font-weight:700; color:#1a1a19; letter-spacing:-0.01em;">
+              LearnNexus
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:20px 40px 0 40px;">
+            <h1 th:text="${heading}"
+                style="margin:0 0 14px 0; font-family:Georgia,'Times New Roman',serif; font-size:27px; line-height:1.22; font-weight:600; color:#16150f; letter-spacing:-0.018em;">
+              Heading
+            </h1>
+            <p th:text="${body}"
+               style="margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif; font-size:15px; line-height:1.65; color:#4a4843;">
+              Body
+            </p>
+          </td>
+        </tr>
+
+        <tr th:if="${ctaUrl}">
+          <td style="padding:28px 40px 4px 40px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td th:style="'border-radius:10px; background:hsl(' + ${brandHue} + ', 62%, 44%);'"
+                    style="border-radius:10px; background:#5647c9;">
+                  <a th:href="${ctaUrl}" th:text="${ctaLabel}"
+                     style="display:inline-block; padding:13px 26px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif; font-size:14.5px; font-weight:600; color:#ffffff; text-decoration:none; letter-spacing:-0.005em;">
+                    Open
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr th:if="${ctaUrl}">
+          <td style="padding:18px 40px 0 40px;">
+            <p style="margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif; font-size:12.5px; line-height:1.6; color:#8a877f;">
+              If the button does not work, copy this link into your browser:<br>
+              <a th:href="${ctaUrl}" th:text="${ctaUrl}"
+                 style="color:#6a6760; word-break:break-all; text-decoration:underline;">link</a>
+            </p>
+          </td>
+        </tr>
+
+        <tr th:if="${footnote}">
+          <td style="padding:22px 40px 0 40px;">
+            <p th:text="${footnote}"
+               style="margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif; font-size:12.5px; line-height:1.6; color:#8a877f;">
+              Footnote
+            </p>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:32px 40px 34px 40px;">
+            <div style="height:1px; background:#eceae5; line-height:1px; font-size:0;">&nbsp;</div>
+            <p style="margin:20px 0 0 0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif; font-size:12px; line-height:1.6; color:#9c9992;">
+              <span th:text="${emailFooter} ?: 'You are receiving this because you have a ' + ${tenantName} + ' learning account.'">Footer</span>
+              <span th:if="${supportEmail}">
+                Questions? Write to
+                <a th:href="'mailto:' + ${supportEmail}" th:text="${supportEmail}"
+                   style="color:#6a6760; text-decoration:underline;">support</a>.
+              </span>
+            </p>
+          </td>
+        </tr>
+      </table>
+
+      <p style="margin:20px 0 0 0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif; font-size:11.5px; color:#a9a69e;">
+        Powered by LearnNexus
+      </p>
+
+    </td>
+  </tr>
+</table>
+</body>
+</html>

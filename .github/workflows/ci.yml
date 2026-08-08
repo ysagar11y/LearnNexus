@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: temurin
+          cache: maven
+
+      # Testcontainers starts its own PostgreSQL, so no service container is
+      # declared here — the runner's Docker daemon is all it needs.
+      - name: Build and test
+        working-directory: backend
+        run: mvn -B verify
+
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-reports
+          path: |
+            backend/target/surefire-reports/
+            backend/target/failsafe-reports/
+
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install
+        working-directory: frontend
+        run: npm ci
+
+      - name: Typecheck
+        working-directory: frontend
+        run: npm run typecheck
+
+      # `build` runs tsc again and then bundles; it is what catches a broken
+      # import of the design system, which lives outside this package.
+      - name: Build
+        working-directory: frontend
+        run: npm run build
+
+  design-system:
+    name: Design system
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The one rule that cannot be enforced by a type: every colour must derive
+      # from the three tenant dials. A literal hex in a component looks fine on
+      # the default palette and wrong on every other tenant.
+      - name: No hardcoded colours in components
+        run: |
+          if grep -rInE '#[0-9a-fA-F]{3,8}\b|rgba?\(' \
+               design-system/components frontend/src \
+               --include='*.jsx' --include='*.tsx' --include='*.ts'; then
+            echo
+            echo "Found a literal colour. Use a semantic token — see design-system/readme.md §1."
+            exit 1
+          fi
+          echo "No literal colours found."

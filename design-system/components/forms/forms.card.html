@@ -1,0 +1,109 @@
+<!-- @dsCard group="Components" viewport="860x400" name="Forms" subtitle="Button, Input, Label, Textarea, Select, Checkbox, Switch" -->
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  .f { padding: 26px; background: var(--background); font-family: var(--font-sans); display: grid;
+       grid-template-columns: 1fr 300px; gap: 32px; }
+  .f-lbl { font-size: var(--text-2xs); letter-spacing: 0.06em; text-transform: uppercase;
+           font-weight: 600; color: var(--muted-foreground); margin-bottom: 10px; }
+  .btn { display:inline-flex; align-items:center; justify-content:center; height:36px;
+         padding:0 16px; border-radius:var(--radius-md); border:1px solid transparent;
+         font-size:var(--text-sm); font-weight:500; line-height:1; cursor:pointer; }
+  .btn-primary { background:var(--primary); color:var(--primary-foreground); box-shadow:var(--shadow-xs); }
+  .btn-accent  { background:var(--accent); color:var(--accent-foreground); box-shadow:var(--shadow-xs); }
+  .btn-secondary { background:var(--secondary); color:var(--secondary-foreground); }
+  .btn-outline { background:var(--card); color:var(--foreground); border-color:var(--input); box-shadow:var(--shadow-xs); }
+  .btn-ghost { background:transparent; color:var(--muted-foreground); }
+  .btn-danger { background:var(--destructive); color:var(--destructive-foreground); }
+  .btn-sm { height:32px; padding:0 12px; }
+  .btn-lg { height:44px; padding:0 22px; font-size:var(--text-base); }
+  .btn-dis { opacity:.55; cursor:not-allowed; }
+  .field { display:flex; align-items:center; gap:8px; height:38px; padding:0 12px;
+           background:var(--card); border:1px solid var(--input); border-radius:var(--radius-md);
+           box-shadow:var(--shadow-xs); font-size:var(--text-sm); color:var(--muted-foreground); }
+  .field-focus { border-color:var(--ring); box-shadow:0 0 0 3px oklch(from var(--ring) l c h / .18); color:var(--foreground); }
+  .field-err { border-color:var(--destructive); box-shadow:0 0 0 3px oklch(from var(--destructive) l c h / .18); }
+  .lab { display:flex; gap:5px; font-size:var(--text-sm); font-weight:500; margin-bottom:6px; }
+  .err { font-size:var(--text-xs); color:var(--destructive); margin-top:5px; display:block; }
+  .stack { display:flex; flex-direction:column; gap:14px; }
+</style>
+
+<div class="f">
+  <div>
+    <div class="f-lbl">Buttons — variants &amp; sizes</div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+      <span class="btn btn-primary">Enroll now</span>
+      <span class="btn btn-accent">Start free trial</span>
+      <span class="btn btn-secondary">Secondary</span>
+      <span class="btn btn-outline">Outline</span>
+      <span class="btn btn-ghost">Ghost</span>
+      <span class="btn btn-danger">Withdraw</span>
+    </div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+      <span class="btn btn-primary btn-sm">Small</span>
+      <span class="btn btn-primary">Medium</span>
+      <span class="btn btn-primary btn-lg">Large</span>
+      <span class="btn btn-primary btn-dis">Disabled</span>
+    </div>
+
+    <div class="f-lbl" style="margin-top:26px;">Selection controls</div>
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <label style="display:flex; gap:10px; align-items:center; font-size:var(--text-sm);">
+        <span style="width:18px;height:18px;border-radius:var(--radius-xs);background:var(--primary);
+                     display:inline-flex;align-items:center;justify-content:center;color:var(--primary-foreground);flex-shrink:0">
+          <svg width="11" height="11" viewBox="0 0 11 11"><path d="M2 5.6 L4.3 8 L9 3" fill="none"
+            stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        Notify me when a course is assigned
+      </label>
+      <label style="display:flex; gap:10px; align-items:center; font-size:var(--text-sm);">
+        <span style="width:18px;height:18px;border-radius:var(--radius-xs);background:var(--primary);
+                     display:inline-flex;align-items:center;justify-content:center;color:var(--primary-foreground);flex-shrink:0">
+          <svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 5h6" stroke="currentColor"
+            stroke-width="1.9" stroke-linecap="round"/></svg>
+        </span>
+        Indeterminate — bulk select header
+      </label>
+      <div style="display:flex; gap:12px; align-items:center;">
+        <span style="width:36px;height:20px;padding:2px;border-radius:99px;background:var(--primary);
+                     display:inline-flex;align-items:center;flex-shrink:0">
+          <span style="width:16px;height:16px;border-radius:50%;background:var(--card);
+                       box-shadow:var(--shadow-sm);transform:translateX(16px)"></span>
+        </span>
+        <span style="font-size:var(--text-sm);font-weight:500">Certificates enabled</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="stack">
+    <div class="f-lbl" style="margin:0">Fields</div>
+    <div>
+      <div class="lab">Work email <span style="color:var(--destructive)">*</span></div>
+      <div class="field field-focus">priya@acme.com</div>
+    </div>
+    <div>
+      <div class="lab">Course level</div>
+      <div class="field" style="justify-content:space-between">
+        <span>Intermediate</span>
+        <svg width="14" height="14" viewBox="0 0 14 14"><path d="M3.5 5.5 L7 9 L10.5 5.5" fill="none"
+          stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+    <div>
+      <div class="lab">Passing score</div>
+      <div class="field field-err">120</div>
+      <span class="err">Must be between 0 and 100.</span>
+    </div>
+    <div>
+      <div class="lab" style="justify-content:space-between">
+        <span>Summary</span>
+        <span style="font-weight:400;color:var(--muted-foreground);font-size:var(--text-xs)">0 / 600</span>
+      </div>
+      <div style="height:64px;background:var(--card);border:1px solid var(--input);
+                  border-radius:var(--radius-md);box-shadow:var(--shadow-xs);padding:10px 12px;
+                  font-size:var(--text-sm);color:var(--muted-foreground)">
+        What will learners be able to do?
+      </div>
+    </div>
+  </div>
+</div>

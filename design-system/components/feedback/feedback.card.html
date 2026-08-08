@@ -1,0 +1,86 @@
+<!-- @dsCard group="Components" viewport="860x400" name="Feedback" subtitle="Badge (schema-aware), Alert, EmptyState, Skeleton" -->
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  .fb { padding: 26px; background: var(--background); font-family: var(--font-sans);
+        display: grid; grid-template-columns: 1fr 320px; gap: 30px; }
+  .fb-lbl { font-size: var(--text-2xs); letter-spacing:.06em; text-transform:uppercase;
+            font-weight:600; color:var(--muted-foreground); margin-bottom:10px; }
+  .bdg { display:inline-flex; align-items:center; gap:5px; height:22px; padding:0 8px;
+         border-radius:99px; font-size:var(--text-xs); font-weight:500; line-height:1; }
+  .bdg i { width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0 }
+  .alert { display:flex; gap:12px; padding:16px; border-radius:var(--radius-md); margin-bottom:10px; }
+  .alert h4 { font-size:var(--text-sm); font-weight:600; color:var(--foreground); margin-bottom:3px; }
+  .alert p { font-size:var(--text-sm); color:var(--muted-foreground); line-height:var(--leading-normal); }
+  .sk { display:block; border-radius:var(--radius-sm);
+        background:linear-gradient(90deg,var(--muted) 0%,color-mix(in oklch,var(--muted),var(--card) 60%) 50%,var(--muted) 100%);
+        background-size:200% 100%; animation:sh 1.4s ease-in-out infinite; }
+  @keyframes sh { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+</style>
+
+<div class="fb">
+  <div>
+    <div class="fb-lbl">Badges — mapped from schema enums</div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:22px;">
+      <span class="bdg" style="background:var(--success-soft);color:var(--success)"><i></i>Published</span>
+      <span class="bdg" style="background:var(--warning-soft);color:var(--warning)"><i></i>In review</span>
+      <span class="bdg" style="background:var(--muted);color:var(--muted-foreground)"><i></i>Draft</span>
+      <span class="bdg" style="background:var(--primary-soft);color:var(--primary-soft-foreground)"><i></i>Active</span>
+      <span class="bdg" style="background:var(--danger-soft);color:var(--destructive)"><i></i>Expired</span>
+      <span class="bdg" style="background:var(--info-soft);color:var(--info)"><i></i>Submitted</span>
+      <span class="bdg" style="background:var(--accent-soft);color:var(--accent-foreground)"><i></i>Trial</span>
+    </div>
+
+    <div class="fb-lbl">Alerts — colour is never the only signal</div>
+    <div class="alert" style="background:var(--warning-soft);border-inline-start:3px solid var(--warning)">
+      <svg width="16" height="16" viewBox="0 0 16 16" style="color:var(--warning);flex-shrink:0;margin-top:1px">
+        <circle cx="8" cy="8" r="7" fill="currentColor" opacity=".16"/>
+        <path d="M8 4.4v4.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="8" cy="11.4" r="1" fill="currentColor"/></svg>
+      <div><h4>3 mandatory courses due this week</h4>
+        <p>Data Protection Essentials is due Friday. Two others follow next Monday.</p></div>
+    </div>
+    <div class="alert" style="background:var(--success-soft);border-inline-start:3px solid var(--success)">
+      <svg width="16" height="16" viewBox="0 0 16 16" style="color:var(--success);flex-shrink:0;margin-top:1px">
+        <circle cx="8" cy="8" r="7" fill="currentColor" opacity=".16"/>
+        <path d="M5 8.2 L7 10.2 L11 5.8" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div><h4>Certificate issued</h4>
+        <p>Your certificate for Onboarding Fundamentals is ready to download.</p></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="fb-lbl">Empty state — always carries an action</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+                padding:32px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;
+                box-shadow:var(--shadow-sm);margin-bottom:20px;">
+      <div style="width:56px;height:56px;border-radius:var(--radius-2xl);background:var(--primary-soft);
+                  color:var(--primary);display:flex;align-items:center;justify-content:center;margin-bottom:16px">
+        <svg width="28" height="28" viewBox="0 0 30 30" fill="none">
+          <rect x="4" y="6.5" width="22" height="17" rx="2.5" stroke="currentColor" stroke-width="1.8" opacity=".5"/>
+          <path d="M15 6.5v17" stroke="currentColor" stroke-width="1.8" opacity=".5"/>
+          <path d="M8 11.5h4M8 15h4M18 11.5h4M18 15h4" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" opacity=".75"/></svg>
+      </div>
+      <h3 style="font-size:var(--text-lg);font-weight:600">No courses yet</h3>
+      <p style="margin-top:6px;font-size:var(--text-sm);color:var(--muted-foreground);max-width:34ch;
+                line-height:var(--leading-normal)">
+        Publish your first course and it will appear here for every learner in your org.
+      </p>
+      <span style="margin-top:18px;display:inline-flex;align-items:center;height:36px;padding:0 16px;
+                   border-radius:var(--radius-md);background:var(--primary);color:var(--primary-foreground);
+                   font-size:var(--text-sm);font-weight:500">Create a course</span>
+    </div>
+
+    <div class="fb-lbl">Skeleton — mirrors the real footprint</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden">
+      <span class="sk" style="height:76px;border-radius:0"></span>
+      <div style="padding:14px;display:flex;flex-direction:column;gap:9px">
+        <span class="sk" style="width:38%;height:9px;border-radius:99px"></span>
+        <span class="sk" style="width:88%;height:13px"></span>
+        <span class="sk" style="width:60%;height:13px"></span>
+      </div>
+    </div>
+  </div>
+</div>

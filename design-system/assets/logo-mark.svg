@@ -1,0 +1,15 @@
+<!-- LearnNexus mark.
+     Three nodes on an ascending path, joined into a single stroke: the
+     "nexus" is the join, the ascent is progression through a course.
+     Drawn with currentColor so it inherits whatever the tenant theme
+     resolves the primary token to. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none"
+     width="32" height="32" role="img" aria-label="LearnNexus">
+  <path d="M6 24.5 L14 16.5 L20 21 L26.5 8.5"
+        stroke="currentColor" stroke-width="2.4"
+        stroke-linecap="round" stroke-linejoin="round"
+        opacity="0.32"/>
+  <circle cx="6"    cy="24.5" r="3.1" fill="currentColor" opacity="0.55"/>
+  <circle cx="14"   cy="16.5" r="3.1" fill="currentColor" opacity="0.75"/>
+  <circle cx="26.5" cy="8.5"  r="4"   fill="currentColor"/>
+</svg>

@@ -1,0 +1,9 @@
+/* LearnNexus design system — single entry point.
+   Import order matters: tokens define the variables that base.css
+   consumes, and colors.css must land before effects.css because the
+   shadow tints read --brand-h. */
+@import "tokens/colors.css";
+@import "tokens/typography.css";
+@import "tokens/spacing.css";
+@import "tokens/effects.css";
+@import "base.css";

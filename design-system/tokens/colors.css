@@ -1,0 +1,342 @@
+/* =====================================================================
+   LearnNexus :: color system  —  DARK-FIRST
+   ---------------------------------------------------------------------
+   Direction: deep blue-navy ground, translucent surfaces, pastel blue as
+   the light source.
+
+   The discipline that makes a dark UI read as refined rather than as
+   "the light one with the colours flipped":
+
+     1. Surfaces are ALPHA, not solid. Every panel is the same white-blue
+        tint at a different opacity, layered over the canvas. This is why
+        nesting works at any depth without a new token per level, and why
+        a card over a card still reads correctly.
+     2. Contrast between canvas and surface is LOW (~4-6% lightness).
+        Separation comes from a hairline border, not from a value jump.
+     3. Elevation is nearly absent. Shadows on dark grounds read as mud;
+        a 1px lighter border does the job a shadow does on white.
+     4. Saturated colour is RARE and SMALL — status chips only. Everything
+        structural is desaturated blue-grey. The restraint is what makes
+        the few vivid pixels land.
+
+   Everything still derives from three dials, so tenant theming survives:
+
+       --brand-h   brand hue      0–360
+       --brand-c   brand chroma
+       --accent-h  accent hue     0–360
+
+   mapping 1:1 onto tenant_branding.brand_hue / brand_chroma / accent_hue.
+   ===================================================================== */
+
+:root {
+  /* ---- the three dials -------------------------------------------- */
+  --brand-h: 232;
+  --brand-c: 0.130;
+  --accent-h: 38;
+  --accent-c: 0.115;
+
+  /* Ground hue. Slightly bluer than the brand so the canvas recedes and
+     pastel brand surfaces advance against it. */
+  --ground-h: 250;
+
+  /* ---- pastel blue ramp -------------------------------------------
+     On a dark ground the useful range inverts: 200–400 become the
+     foreground/accent colours (they glow), and 700+ are almost unusable
+     except as deep fills. */
+  --brand-50:  oklch(0.975 calc(var(--brand-c) * 0.16) var(--brand-h));
+  --brand-100: oklch(0.950 calc(var(--brand-c) * 0.30) var(--brand-h));
+  --brand-200: oklch(0.910 calc(var(--brand-c) * 0.50) var(--brand-h));
+  --brand-300: oklch(0.862 calc(var(--brand-c) * 0.68) var(--brand-h));
+  --brand-400: oklch(0.788 calc(var(--brand-c) * 0.86) var(--brand-h));
+  --brand-500: oklch(0.700 calc(var(--brand-c) * 0.98) var(--brand-h));
+  --brand-600: oklch(0.585 calc(var(--brand-c) * 1.00) var(--brand-h));
+  --brand-700: oklch(0.500 calc(var(--brand-c) * 0.92) var(--brand-h));
+  --brand-800: oklch(0.408 calc(var(--brand-c) * 0.76) var(--brand-h));
+  --brand-900: oklch(0.325 calc(var(--brand-c) * 0.58) var(--brand-h));
+  --brand-950: oklch(0.245 calc(var(--brand-c) * 0.44) var(--brand-h));
+
+  /* ---- accent (warm apricot) --------------------------------------- */
+  --accent-200: oklch(0.918 calc(var(--accent-c) * 0.52) var(--accent-h));
+  --accent-300: oklch(0.868 calc(var(--accent-c) * 0.76) var(--accent-h));
+  --accent-400: oklch(0.800 calc(var(--accent-c) * 0.94) var(--accent-h));
+  --accent-500: oklch(0.735 calc(var(--accent-c) * 1.00) var(--accent-h));
+  --accent-600: oklch(0.650 calc(var(--accent-c) * 1.00) var(--accent-h));
+  --accent-700: oklch(0.545 calc(var(--accent-c) * 0.88) var(--accent-h));
+
+  /* =====================================================================
+     Vivid chip palette — the ONLY saturated colour in the system.
+     Small, rare, and high-contrast against the muted structure. Fixed
+     hues: never tenant-themed, because a tenant must not be able to make
+     "overdue" look like "complete".
+     ===================================================================== */
+  --chip-info-fg:   oklch(0.780 0.140 245);
+  --chip-info-bg:   oklch(0.780 0.140 245 / 0.16);
+  --chip-hot-fg:    oklch(0.730 0.175  22);
+  --chip-hot-bg:    oklch(0.730 0.175  22 / 0.16);
+  --chip-pro-fg:    oklch(0.760 0.150 292);
+  --chip-pro-bg:    oklch(0.760 0.150 292 / 0.16);
+  --chip-new-fg:    oklch(0.790 0.140 158);
+  --chip-new-bg:    oklch(0.790 0.140 158 / 0.16);
+  --chip-warn-fg:   oklch(0.820 0.135  82);
+  --chip-warn-bg:   oklch(0.820 0.135  82 / 0.16);
+
+  /* ---- status ------------------------------------------------------ */
+  --success-h: 155;
+  --warning-h: 80;
+  --danger-h:  22;
+  --info-h:    245;
+}
+
+/* =====================================================================
+   DARK — the default
+   ===================================================================== */
+
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --background: oklch(0.168 0.020 var(--ground-h));
+  --foreground: oklch(0.948 0.008 var(--ground-h));
+
+  /* The tint. One colour, five opacities — this IS the elevation system.
+     Nesting composes correctly because each layer adds light rather than
+     replacing it. */
+  --tint:          oklch(0.88 0.045 var(--ground-h));
+  --surface:       oklch(0.88 0.045 var(--ground-h) / 0.045);
+  --surface-hover: oklch(0.88 0.045 var(--ground-h) / 0.075);
+  --surface-active:oklch(0.88 0.045 var(--ground-h) / 0.105);
+  --surface-solid: oklch(0.218 0.021 var(--ground-h));
+
+  --card:               var(--surface);
+  --card-foreground:    var(--foreground);
+  --raised:             var(--surface-hover);
+  --popover:            oklch(0.228 0.022 var(--ground-h));
+  --popover-foreground: var(--foreground);
+
+  /* Pastel blue wash — feature blocks, callouts, empty states. */
+  --panel:            oklch(from var(--brand-300) l c h / 0.10);
+  --panel-strong:     oklch(from var(--brand-300) l c h / 0.16);
+  --panel-foreground: var(--brand-100);
+
+  /* Primary action is PASTEL BLUE with dark text — the single brightest
+     element on screen, and the reason the product reads as blue at all. */
+  --primary:            var(--brand-300);
+  --primary-hover:      var(--brand-200);
+  --primary-foreground: oklch(0.20 0.035 var(--brand-h));
+  --primary-soft:       oklch(from var(--brand-300) l c h / 0.14);
+  --primary-soft-foreground: var(--brand-200);
+
+  --accent:            var(--accent-300);
+  --accent-hover:      var(--accent-200);
+  --accent-foreground: oklch(0.22 0.045 var(--accent-h));
+  --accent-soft:       oklch(from var(--accent-300) l c h / 0.15);
+
+  --secondary:            var(--surface-hover);
+  --secondary-foreground: var(--foreground);
+
+  /* --muted is a *visible* subtle fill (badges, kbd, inert chips), so it
+     sits a step above --surface. A 4.5% tint is right for a large panel
+     but disappears at badge size. */
+  --muted:            var(--surface-hover);
+  --muted-foreground: oklch(0.688 0.018 var(--ground-h));
+
+  /* Dedicated rail colour for progress bars and sliders. These are thin
+     (5–7px) and need real presence against the canvas — the surface
+     tints are far too faint at that size. */
+  --track: oklch(0.88 0.045 var(--ground-h) / 0.16);
+
+  /* Hairlines carry all the separation. */
+  --border:        oklch(0.88 0.045 var(--ground-h) / 0.10);
+  --border-strong: oklch(0.88 0.045 var(--ground-h) / 0.19);
+  --input:         oklch(0.88 0.045 var(--ground-h) / 0.15);
+  --ring:          var(--brand-300);
+
+  --destructive:            oklch(0.700 0.155 var(--danger-h));
+  --destructive-foreground: oklch(0.19 0.03 var(--danger-h));
+  --success:                oklch(0.760 0.130 var(--success-h));
+  --success-soft:           oklch(0.760 0.130 var(--success-h) / 0.15);
+  --success-foreground:     oklch(0.19 0.03 var(--success-h));
+  --warning:                oklch(0.820 0.135 var(--warning-h));
+  --warning-soft:           oklch(0.820 0.135 var(--warning-h) / 0.15);
+  --danger-soft:            oklch(0.700 0.155 var(--danger-h) / 0.15);
+  --info:                   oklch(0.780 0.140 var(--info-h));
+  --info-soft:              oklch(0.780 0.140 var(--info-h) / 0.15);
+
+  /* Sidebar sits slightly BELOW the canvas — recessed chrome, so content
+     is the brightest thing on screen. */
+  --sidebar:                   oklch(0.148 0.020 var(--ground-h));
+  --sidebar-foreground:        oklch(0.900 0.012 var(--ground-h));
+  --sidebar-muted-foreground:  oklch(0.640 0.018 var(--ground-h));
+  --sidebar-active:            var(--surface-active);
+  --sidebar-active-foreground: oklch(0.980 0.010 var(--ground-h));
+  --sidebar-border:            oklch(0.88 0.045 var(--ground-h) / 0.08);
+
+  --chart-1: var(--brand-300);
+  --chart-2: oklch(0.790 0.120 calc(var(--brand-h) - 62));
+  --chart-3: oklch(0.820 0.115 calc(var(--brand-h) - 144));
+  --chart-4: oklch(0.840 0.120 calc(var(--brand-h) + 172));
+  --chart-5: oklch(0.770 0.125 calc(var(--brand-h) + 80));
+  --chart-6: oklch(0.700 0.105 calc(var(--brand-h) + 36));
+}
+
+/* =====================================================================
+   LIGHT — the alternate. Same discipline, inverted ground.
+   ===================================================================== */
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --background: oklch(0.988 0.004 var(--ground-h));
+  --foreground: oklch(0.235 0.022 var(--ground-h));
+
+  --tint:           oklch(0.30 0.030 var(--ground-h));
+  --surface:        oklch(1 0 0);
+  --surface-hover:  oklch(0.30 0.030 var(--ground-h) / 0.040);
+  --surface-active: oklch(0.30 0.030 var(--ground-h) / 0.065);
+  --surface-solid:  oklch(1 0 0);
+
+  --card:               var(--surface);
+  --card-foreground:    var(--foreground);
+  --raised:             oklch(0.972 0.006 var(--ground-h));
+  --popover:            oklch(1 0 0);
+  --popover-foreground: var(--foreground);
+
+  --panel:            oklch(from var(--brand-300) l c h / 0.20);
+  --panel-strong:     oklch(from var(--brand-300) l c h / 0.34);
+  --panel-foreground: var(--brand-900);
+
+  --primary:            var(--brand-600);
+  --primary-hover:      var(--brand-700);
+  --primary-foreground: oklch(0.99 0.004 var(--brand-h));
+  --primary-soft:       oklch(from var(--brand-300) l c h / 0.24);
+  --primary-soft-foreground: var(--brand-800);
+
+  --accent:            var(--accent-400);
+  --accent-hover:      var(--accent-500);
+  --accent-foreground: oklch(0.26 0.05 var(--accent-h));
+  --accent-soft:       oklch(from var(--accent-300) l c h / 0.28);
+
+  --secondary:            oklch(from var(--brand-300) l c h / 0.20);
+  --secondary-foreground: var(--brand-800);
+
+  --muted:            oklch(0.966 0.006 var(--ground-h));
+  --muted-foreground: oklch(0.520 0.020 var(--ground-h));
+  --track:            oklch(0.30 0.030 var(--ground-h) / 0.13);
+
+  --border:        oklch(0.30 0.030 var(--ground-h) / 0.11);
+  --border-strong: oklch(0.30 0.030 var(--ground-h) / 0.20);
+  --input:         oklch(0.30 0.030 var(--ground-h) / 0.18);
+  --ring:          var(--brand-500);
+
+  --destructive:            oklch(0.558 0.155 var(--danger-h));
+  --destructive-foreground: oklch(0.99 0.004 var(--danger-h));
+  --success:                oklch(0.560 0.105 var(--success-h));
+  --success-soft:           oklch(0.560 0.105 var(--success-h) / 0.14);
+  --success-foreground:     oklch(0.99 0.004 var(--success-h));
+  --warning:                oklch(0.605 0.108 var(--warning-h));
+  --warning-soft:           oklch(0.605 0.108 var(--warning-h) / 0.15);
+  --danger-soft:            oklch(0.558 0.155 var(--danger-h) / 0.12);
+  --info:                   oklch(0.578 0.110 var(--info-h));
+  --info-soft:              oklch(0.578 0.110 var(--info-h) / 0.13);
+
+  --sidebar:                   oklch(from var(--brand-300) l c h / 0.22);
+  --sidebar-foreground:        var(--brand-950);
+  --sidebar-muted-foreground:  var(--brand-700);
+  --sidebar-active:            oklch(1 0 0);
+  --sidebar-active-foreground: var(--brand-800);
+  --sidebar-border:            oklch(0.30 0.030 var(--ground-h) / 0.10);
+
+  /* Chips need darker foregrounds on a light ground. */
+  --chip-info-fg: oklch(0.520 0.150 245); --chip-info-bg: oklch(0.520 0.150 245 / 0.13);
+  --chip-hot-fg:  oklch(0.545 0.180  22); --chip-hot-bg:  oklch(0.545 0.180  22 / 0.13);
+  --chip-pro-fg:  oklch(0.520 0.170 292); --chip-pro-bg:  oklch(0.520 0.170 292 / 0.13);
+  --chip-new-fg:  oklch(0.500 0.130 158); --chip-new-bg:  oklch(0.500 0.130 158 / 0.13);
+  --chip-warn-fg: oklch(0.545 0.120  82); --chip-warn-bg: oklch(0.545 0.120  82 / 0.15);
+
+  --chart-1: var(--brand-600);
+  --chart-2: oklch(0.640 0.120 calc(var(--brand-h) - 62));
+  --chart-3: oklch(0.690 0.115 calc(var(--brand-h) - 144));
+  --chart-4: oklch(0.720 0.120 calc(var(--brand-h) + 172));
+  --chart-5: oklch(0.650 0.125 calc(var(--brand-h) + 80));
+  --chart-6: oklch(0.560 0.105 calc(var(--brand-h) + 36));
+}
+
+/* Users who explicitly prefer light get it, unless the tenant pinned dark. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+
+    --background: oklch(0.988 0.004 var(--ground-h));
+    --foreground: oklch(0.235 0.022 var(--ground-h));
+
+    --tint:           oklch(0.30 0.030 var(--ground-h));
+    --surface:        oklch(1 0 0);
+    --surface-hover:  oklch(0.30 0.030 var(--ground-h) / 0.040);
+    --surface-active: oklch(0.30 0.030 var(--ground-h) / 0.065);
+    --surface-solid:  oklch(1 0 0);
+
+    --card:               var(--surface);
+    --card-foreground:    var(--foreground);
+    --raised:             oklch(0.972 0.006 var(--ground-h));
+    --popover:            oklch(1 0 0);
+    --popover-foreground: var(--foreground);
+
+    --panel:            oklch(from var(--brand-300) l c h / 0.20);
+    --panel-strong:     oklch(from var(--brand-300) l c h / 0.34);
+    --panel-foreground: var(--brand-900);
+
+    --primary:            var(--brand-600);
+    --primary-hover:      var(--brand-700);
+    --primary-foreground: oklch(0.99 0.004 var(--brand-h));
+    --primary-soft:       oklch(from var(--brand-300) l c h / 0.24);
+    --primary-soft-foreground: var(--brand-800);
+
+    --accent:            var(--accent-400);
+    --accent-hover:      var(--accent-500);
+    --accent-foreground: oklch(0.26 0.05 var(--accent-h));
+    --accent-soft:       oklch(from var(--accent-300) l c h / 0.28);
+
+    --secondary:            oklch(from var(--brand-300) l c h / 0.20);
+    --secondary-foreground: var(--brand-800);
+
+    --muted:            oklch(0.966 0.006 var(--ground-h));
+    --muted-foreground: oklch(0.520 0.020 var(--ground-h));
+    --track:            oklch(0.30 0.030 var(--ground-h) / 0.13);
+
+    --border:        oklch(0.30 0.030 var(--ground-h) / 0.11);
+    --border-strong: oklch(0.30 0.030 var(--ground-h) / 0.20);
+    --input:         oklch(0.30 0.030 var(--ground-h) / 0.18);
+    --ring:          var(--brand-500);
+
+    --destructive:            oklch(0.558 0.155 var(--danger-h));
+    --destructive-foreground: oklch(0.99 0.004 var(--danger-h));
+    --success:                oklch(0.560 0.105 var(--success-h));
+    --success-soft:           oklch(0.560 0.105 var(--success-h) / 0.14);
+    --success-foreground:     oklch(0.99 0.004 var(--success-h));
+    --warning:                oklch(0.605 0.108 var(--warning-h));
+    --warning-soft:           oklch(0.605 0.108 var(--warning-h) / 0.15);
+    --danger-soft:            oklch(0.558 0.155 var(--danger-h) / 0.12);
+    --info:                   oklch(0.578 0.110 var(--info-h));
+    --info-soft:              oklch(0.578 0.110 var(--info-h) / 0.13);
+
+    --sidebar:                   oklch(from var(--brand-300) l c h / 0.22);
+    --sidebar-foreground:        var(--brand-950);
+    --sidebar-muted-foreground:  var(--brand-700);
+    --sidebar-active:            oklch(1 0 0);
+    --sidebar-active-foreground: var(--brand-800);
+    --sidebar-border:            oklch(0.30 0.030 var(--ground-h) / 0.10);
+
+    --chip-info-fg: oklch(0.520 0.150 245); --chip-info-bg: oklch(0.520 0.150 245 / 0.13);
+    --chip-hot-fg:  oklch(0.545 0.180  22); --chip-hot-bg:  oklch(0.545 0.180  22 / 0.13);
+    --chip-pro-fg:  oklch(0.520 0.170 292); --chip-pro-bg:  oklch(0.520 0.170 292 / 0.13);
+    --chip-new-fg:  oklch(0.500 0.130 158); --chip-new-bg:  oklch(0.500 0.130 158 / 0.13);
+    --chip-warn-fg: oklch(0.545 0.120  82); --chip-warn-bg: oklch(0.545 0.120  82 / 0.15);
+
+    --chart-1: var(--brand-600);
+    --chart-2: oklch(0.640 0.120 calc(var(--brand-h) - 62));
+    --chart-3: oklch(0.690 0.115 calc(var(--brand-h) - 144));
+    --chart-4: oklch(0.720 0.120 calc(var(--brand-h) + 172));
+    --chart-5: oklch(0.650 0.125 calc(var(--brand-h) + 80));
+    --chart-6: oklch(0.560 0.105 calc(var(--brand-h) + 36));
+  }
+}

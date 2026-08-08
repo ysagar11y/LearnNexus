@@ -1,0 +1,141 @@
+<!-- @dsCard group="Components" viewport="880x470" name="Learning" subtitle="CourseCard (browse & enrolled), LessonRow, CertificateCard" -->
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  .ln { padding: 26px; background: var(--background); font-family: var(--font-sans);
+        display: grid; grid-template-columns: 230px 230px 1fr; gap: 20px; align-items: start; }
+  .lbl { font-size: var(--text-2xs); letter-spacing:.06em; text-transform:uppercase;
+         font-weight:600; color:var(--muted-foreground); margin-bottom:10px; }
+  .cc { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg);
+        overflow:hidden; box-shadow:var(--shadow-sm); }
+  .cc-cov { position:relative; aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; }
+  .cc-body { padding:16px; display:flex; flex-direction:column; gap:10px; }
+  .cc-cat { font-size:var(--text-2xs); font-weight:600; letter-spacing:.06em;
+            text-transform:uppercase; color:var(--primary); }
+  .cc-title { font-size:var(--text-base); font-weight:600; line-height:var(--leading-snug); }
+  .cc-sum { font-size:var(--text-sm); color:var(--muted-foreground); line-height:var(--leading-normal); }
+  .cc-meta { display:flex; align-items:center; gap:10px; font-size:var(--text-xs);
+             color:var(--muted-foreground); }
+  .dot { width:2.5px;height:2.5px;border-radius:50%;background:var(--border-strong) }
+  .row { display:flex; align-items:center; gap:12px; width:100%; padding:10px 12px;
+         border-radius:var(--radius-md); }
+  .mk { display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;
+        border-radius:50%;flex-shrink:0;font-size:var(--text-2xs);font-weight:600 }
+  .rt { font-size:var(--text-sm); font-weight:500; }
+  .rm { display:flex;align-items:center;gap:6px;font-size:var(--text-2xs);color:var(--muted-foreground);margin-top:2px }
+</style>
+
+<div class="ln">
+  <!-- browse -->
+  <div>
+    <div class="lbl">CourseCard · browse</div>
+    <div class="cc">
+      <div class="cc-cov" style="background:linear-gradient(148deg,oklch(.88 .055 214) 0%,oklch(.93 .035 254) 100%)">
+        <svg viewBox="0 0 100 56" style="width:100%;height:100%;color:oklch(.55 .09 214);opacity:.32">
+          <path d="M18 40 L38 24 L52 34 L82 12" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="18" cy="40" r="3.4" fill="currentColor"/><circle cx="38" cy="24" r="3.4" fill="currentColor"/>
+          <circle cx="82" cy="12" r="4.4" fill="currentColor"/></svg>
+        <span style="position:absolute;top:10px;left:10px;height:20px;padding:0 7px;border-radius:99px;
+                     background:var(--accent);color:var(--accent-foreground);font-size:var(--text-2xs);
+                     font-weight:600;display:inline-flex;align-items:center">Required</span>
+      </div>
+      <div class="cc-body">
+        <span class="cc-cat">Compliance</span>
+        <h3 class="cc-title">Data Protection Essentials</h3>
+        <p class="cc-sum">Handle personal data lawfully under GDPR and DPDP.</p>
+        <div class="cc-meta">
+          <span>Beginner</span><span class="dot"></span><span>1h 45m</span>
+          <span class="dot"></span><span>12 lessons</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- enrolled -->
+  <div>
+    <div class="lbl">CourseCard · enrolled</div>
+    <div class="cc">
+      <div class="cc-cov" style="background:linear-gradient(148deg,oklch(.88 .055 132) 0%,oklch(.93 .035 172) 100%)">
+        <svg viewBox="0 0 100 56" style="width:100%;height:100%;color:oklch(.55 .09 132);opacity:.32">
+          <path d="M18 40 L38 24 L52 34 L82 12" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="18" cy="40" r="3.4" fill="currentColor"/><circle cx="38" cy="24" r="3.4" fill="currentColor"/>
+          <circle cx="82" cy="12" r="4.4" fill="currentColor"/></svg>
+      </div>
+      <div class="cc-body">
+        <span class="cc-cat">Leadership</span>
+        <h3 class="cc-title">Coaching Conversations</h3>
+        <div style="display:flex;flex-direction:column;gap:7px;margin-top:2px">
+          <div style="display:flex;justify-content:space-between;font-size:var(--text-xs)">
+            <span style="color:var(--muted-foreground);font-weight:500">62% complete</span>
+            <span style="color:var(--warning);font-weight:500">Due 14 Aug</span>
+          </div>
+          <div style="height:5px;background:var(--track);border-radius:99px;overflow:hidden">
+            <div style="height:100%;width:62%;background:var(--primary);border-radius:99px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- outline + certificate -->
+  <div>
+    <div class="lbl">LessonRow — four states</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+                padding:8px;box-shadow:var(--shadow-sm);margin-bottom:18px">
+      <div class="row">
+        <span class="mk" style="background:var(--success);color:var(--success-foreground)">
+          <svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 6.2 L5 8.2 L9 3.8" fill="none"
+            stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span style="flex:1;min-width:0">
+          <span class="rt" style="color:var(--muted-foreground)">What counts as personal data</span>
+          <span class="rm">Video · 8 min</span></span>
+      </div>
+      <div class="row" style="background:var(--primary-soft)">
+        <span class="mk" style="background:var(--card);color:var(--primary);box-shadow:inset 0 0 0 2px var(--primary)">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--primary)"></span></span>
+        <span style="flex:1;min-width:0">
+          <span class="rt" style="color:var(--primary-soft-foreground);font-weight:600">Lawful bases explained</span>
+          <span class="rm">Video · 12 min</span></span>
+      </div>
+      <div class="row">
+        <span class="mk" style="background:var(--muted);color:var(--muted-foreground)">3</span>
+        <span style="flex:1;min-width:0">
+          <span class="rt">Knowledge check</span>
+          <span class="rm">Quiz · 5 min</span></span>
+      </div>
+      <div class="row" style="opacity:.55">
+        <span class="mk" style="background:var(--muted);color:var(--muted-foreground)">
+          <svg width="12" height="12" viewBox="0 0 12 12">
+            <rect x="2.8" y="5.4" width="6.4" height="4.6" rx="1.1" fill="currentColor"/>
+            <path d="M4.3 5.4V4.2a1.7 1.7 0 0 1 3.4 0v1.2" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></span>
+        <span style="flex:1;min-width:0"><span class="rt">Final assessment</span>
+          <span class="rm">Exam · 20 min</span></span>
+      </div>
+    </div>
+
+    <div class="lbl">CertificateCard</div>
+    <div style="position:relative;padding:20px;background:var(--card);border:1px solid var(--accent-300);
+                border-radius:var(--radius-lg);box-shadow:var(--shadow-md);overflow:hidden">
+      <div style="position:absolute;inset:0;pointer-events:none;
+                  background:radial-gradient(20rem 10rem at 100% 0%,oklch(from var(--accent) l c h / .13),transparent 62%)"></div>
+      <div style="position:relative;display:flex;gap:14px;align-items:flex-start">
+        <svg width="46" height="46" viewBox="0 0 46 46" fill="none" style="color:var(--accent-600);flex-shrink:0">
+          <circle cx="23" cy="23" r="17" stroke="currentColor" stroke-width="1.3" opacity=".35"/>
+          <circle cx="23" cy="23" r="13.5" stroke="currentColor" stroke-width="1" opacity=".55" stroke-dasharray="2.5 2.5"/>
+          <path d="M17.5 23.4 L21 26.9 L28.5 19.4" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div>
+          <div style="font-size:var(--text-2xs);font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+                      color:var(--accent-700)">Certificate of completion</div>
+          <h3 style="margin-top:6px;font-family:var(--font-display);font-weight:400;font-size:var(--text-xl);
+                     line-height:var(--leading-snug);letter-spacing:var(--tracking-tight)">
+            Onboarding Fundamentals</h3>
+          <p style="margin-top:4px;font-size:var(--text-sm);color:var(--muted-foreground)">
+            Awarded to <span style="color:var(--foreground);font-weight:500">Priya Raman</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

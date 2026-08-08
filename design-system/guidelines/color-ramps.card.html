@@ -1,0 +1,69 @@
+<!-- @dsCard group="Foundations" viewport="860x300" name="Colour ramps" subtitle="Brand, accent and neutral steps — all derived, no hardcoded hex" -->
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  .cr { padding: 24px; background: var(--background); font-family: var(--font-sans); }
+  .cr-label { font-size: var(--text-2xs); letter-spacing: 0.06em; text-transform: uppercase;
+              font-weight: 600; color: var(--muted-foreground); margin-bottom: 8px; }
+  .cr-ramp { display: flex; border-radius: var(--radius-md); overflow: hidden;
+             box-shadow: var(--shadow-xs); margin-bottom: 20px; }
+  .cr-ramp div { flex: 1; height: 52px; display: flex; align-items: flex-end;
+                 justify-content: center; padding-bottom: 5px;
+                 font-size: 9px; font-weight: 600; font-family: var(--font-mono); }
+</style>
+
+<div class="cr">
+  <div class="cr-label">Brand — hue 232, chroma 0.130 · steps 100–400 are the pastel working range</div>
+  <div class="cr-ramp">
+    <div style="background:var(--brand-50);  color:var(--brand-800)">50</div>
+    <div style="background:var(--brand-100); color:var(--brand-800)">100</div>
+    <div style="background:var(--brand-200); color:var(--brand-800)">200</div>
+    <div style="background:var(--brand-300); color:var(--brand-900)">300</div>
+    <div style="background:var(--brand-400); color:var(--brand-950)">400</div>
+    <div style="background:var(--brand-500); color:#fff">500</div>
+    <div style="background:var(--brand-600); color:#fff">600</div>
+    <div style="background:var(--brand-700); color:#fff">700</div>
+    <div style="background:var(--brand-800); color:#fff">800</div>
+    <div style="background:var(--brand-900); color:#fff">900</div>
+    <div style="background:var(--brand-950); color:#fff">950</div>
+  </div>
+
+  <div class="cr-label">Accent — hue 38. Used once per screen, never decoratively</div>
+  <div class="cr-ramp">
+    <div style="background:var(--accent-200); color:var(--accent-700)">200</div>
+    <div style="background:var(--accent-300); color:var(--accent-700)">300</div>
+    <div style="background:var(--accent-400); color:#3a2410">400</div>
+    <div style="background:var(--accent-500); color:#3a2410">500</div>
+    <div style="background:var(--accent-600); color:#fff">600</div>
+    <div style="background:var(--accent-700); color:#fff">700</div>
+  </div>
+
+  <div class="cr-label">Surface ladder — one tint at rising opacity. This IS the elevation system</div>
+  <div class="cr-ramp" style="background:var(--background); box-shadow:none; gap:1px">
+    <div style="background:var(--background);     color:var(--muted-foreground)">canvas</div>
+    <div style="background:var(--surface);        color:var(--foreground)">4.5%</div>
+    <div style="background:var(--surface-hover);  color:var(--foreground)">7.5%</div>
+    <div style="background:var(--surface-active); color:var(--foreground)">10.5%</div>
+    <div style="background:var(--track);          color:var(--foreground)">track&nbsp;16%</div>
+    <div style="background:var(--popover);        color:var(--foreground)">popover</div>
+  </div>
+
+  <div class="cr-label">Vivid chips — the only saturated colour in the system. Small, rare, fixed hues</div>
+  <div style="display:flex; gap:8px; flex-wrap:wrap; font-family:var(--font-sans)">
+    <span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:6px;
+                 background:var(--chip-info-bg);color:var(--chip-info-fg);font-size:11px;
+                 font-weight:700;letter-spacing:.04em">FREE</span>
+    <span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:6px;
+                 background:var(--chip-hot-bg);color:var(--chip-hot-fg);font-size:11px;
+                 font-weight:700;letter-spacing:.04em">HOT</span>
+    <span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:6px;
+                 background:var(--chip-pro-bg);color:var(--chip-pro-fg);font-size:11px;
+                 font-weight:700;letter-spacing:.04em">PRO</span>
+    <span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:6px;
+                 background:var(--chip-new-bg);color:var(--chip-new-fg);font-size:11px;
+                 font-weight:700;letter-spacing:.04em">NEW</span>
+    <span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:6px;
+                 background:var(--chip-warn-bg);color:var(--chip-warn-fg);font-size:11px;
+                 font-weight:700;letter-spacing:.04em">DUE SOON</span>
+  </div>
+</div>
