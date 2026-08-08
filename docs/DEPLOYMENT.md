@@ -26,15 +26,28 @@ public launch.
 Both Render and Cloudflare Pages deploy by connecting to a git repository —
 there is no dashboard upload path used here. If you haven't already:
 
-```bash
-gh repo create learnnexus --private --source=. --remote=origin
-git add -A
-git commit -m "Initial commit"
-git push -u origin main
-```
+1. Create an empty repo at **github.com/new** — name it `learnnexus`, pick
+   Private or Public (either works identically below), and do **not** let
+   GitHub add a README, `.gitignore` or licence. The repo must start empty
+   or the first push is rejected as a non-fast-forward.
 
-(Drop `--private` if you're fine with the code being public. Either works
-identically for the deploy steps below.)
+2. Add the remote and push:
+
+   ```bash
+   git remote add origin git@github-personal:ysagar11y/learnnexus.git
+   git push -u origin main
+   ```
+
+> **Use the `github-personal` host, not `github.com`.** This machine has two
+> GitHub accounts and `~/.ssh/config` picks the key by host alias:
+> `github.com` → the org account, `github-personal` → the personal account.
+> A remote written as `git@github.com:ysagar11y/...` offers the org key and
+> the push is rejected with *"Permission to ysagar11y/learnnexus denied to
+> ysagaropti"*. Verify before pushing:
+>
+> ```bash
+> git remote -v      # must show github-personal
+> ```
 
 ---
 
