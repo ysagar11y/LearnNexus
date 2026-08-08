@@ -51,7 +51,14 @@ public final class UserDtos {
             boolean mfaEnabled,
             Instant lastLoginAt,
             Instant createdAt,
-            LearningSnapshot learning
+            LearningSnapshot learning,
+            /**
+             * Set only in the response to creating or resending an invitation, never
+             * on a plain fetch. The link is also emailed, but a tenant may not have
+             * outbound mail configured — this is what lets an admin hand it to
+             * someone directly (Slack, WhatsApp, in person) regardless.
+             */
+            String inviteUrl
     ) {}
 
     /** Enough of a learner's record to render an admin's user drawer without extra calls. */

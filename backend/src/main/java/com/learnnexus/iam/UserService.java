@@ -4,6 +4,7 @@ import com.learnnexus.audit.AuditService;
 import com.learnnexus.common.ApiException;
 import com.learnnexus.common.PageResponse;
 import com.learnnexus.common.TenantAwareJdbc;
+import com.learnnexus.config.AppProperties;
 import com.learnnexus.notification.MailService;
 import com.learnnexus.security.AppUserPrincipal;
 import com.learnnexus.security.CurrentUser;
@@ -23,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
@@ -56,6 +58,7 @@ public class UserService {
     private final MailService mailService;
     private final AuditService auditService;
     private final TenantAwareJdbc jdbc;
+    private final AppProperties properties;
 
     // -----------------------------------------------------------------
     // Reads
@@ -91,6 +94,16 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserDtos.Detail get(UUID userId) {
+        return get(userId, null);
+    }
+
+    /**
+     * @param inviteUrl attached only by {@link #create} and
+     *                  {@link #resendInvitation}, which alone hold the raw
+     *                  (unhashed) token right after minting it — the stored
+     *                  hash cannot be turned back into a usable link.
+     */
+    private UserDtos.Detail get(UUID userId, String inviteUrl) {
         User user = requireUser(userId);
         Map<UUID, String> unitNames = orgUnitNames();
 
@@ -102,7 +115,16 @@ public class UserService {
                 user.getJobTitle(), user.getPhone(), user.getAvatarUrl(), user.getStatus(), user.roleSet(),
                 user.getOrgUnitId(), unitNames.get(user.getOrgUnitId()), user.getManagerId(), managerName,
                 user.getLocale(), user.getTimezone(), user.isMfaEnabled(), user.getLastLoginAt(),
-                user.getCreatedAt(), learningSnapshot(user.getId()));
+                user.getCreatedAt(), learningSnapshot(user.getId()), inviteUrl);
+    }
+
+    /**
+     * Matches the link {@code MailService.sendInvitation} emails, so the copy
+     * button in the admin console and the emailed link are always the same URL.
+     */
+    private String buildInviteUrl(TenantContext.Snapshot tenant, String rawToken) {
+        String encodedToken = URLEncoder.encode(rawToken, StandardCharsets.UTF_8);
+        return properties.publicBaseUrl() + "/accept-invite?token=" + encodedToken + "&tenant=" + tenant.slug();
     }
 
     @Transactional(readOnly = true)
@@ -183,7 +205,7 @@ public class UserService {
                 Map.of("roles", request.roles().stream().map(Enum::name).toList(),
                         "invited", request.sendInvitation()));
 
-        return get(user.getId());
+        return get(user.getId(), inviteToken == null ? null : buildInviteUrl(tenant, inviteToken));
     }
 
     @Transactional
@@ -269,7 +291,7 @@ public class UserService {
     }
 
     @Transactional
-    public void resendInvitation(UUID userId) {
+    public UserDtos.Detail resendInvitation(UUID userId) {
         TenantContext.Snapshot tenant = TenantContext.require();
         User user = requireUser(userId);
         if (user.getStatus() != User.Status.INVITED) {
@@ -283,6 +305,8 @@ public class UserService {
         String inviter = CurrentUser.find().map(AppUserPrincipal::displayName).orElse(tenant.name());
         mailService.sendInvitation(user, tenant, token, inviter);
         auditService.record(AuditService.USER_UPDATED, "User", userId, "Invitation resent to " + user.getEmail());
+
+        return get(userId, buildInviteUrl(tenant, token));
     }
 
     @Transactional

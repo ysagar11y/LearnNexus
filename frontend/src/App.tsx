@@ -217,7 +217,14 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
   const location = useLocation();
 
   if (!user) {
-    // Remember where they were headed so sign-in can return them there.
+    // A bare visit to "/" is someone who followed a link with no context yet —
+    // show the marketing page first, not a bare sign-in form. A deep link to a
+    // specific page (a bookmarked /my-learning, an invite link) means they
+    // already know what they want, so that still goes straight to sign-in and
+    // returns them to where they were headed once they're in.
+    if (location.pathname === '/') {
+      return <Navigate to="/welcome" replace />;
+    }
     return <Navigate to="/sign-in" replace state={{ from: location.pathname + location.search }} />;
   }
   return <>{children}</>;

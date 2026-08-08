@@ -295,6 +295,8 @@ export interface UserDetail extends UserSummary {
     certificates: number;
     averageProgress: number;
   };
+  /** Only set right after creating or resending an invitation. */
+  inviteUrl?: string | null;
 }
 
 export interface OrgUnitNode {

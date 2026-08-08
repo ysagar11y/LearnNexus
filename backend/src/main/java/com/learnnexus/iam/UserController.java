@@ -106,12 +106,11 @@ public class UserController {
         return userService.changeStatus(userId, request.status());
     }
 
-    @Operation(summary = "Send a fresh invitation email")
+    @Operation(summary = "Issue a fresh invitation link, and email it where mail is configured")
     @PostMapping("/{userId}/resend-invitation")
     @PreAuthorize("hasAnyRole('TENANT_ADMIN','PLATFORM_ADMIN')")
-    public ResponseEntity<Void> resendInvitation(@PathVariable UUID userId) {
-        userService.resendInvitation(userId);
-        return ResponseEntity.accepted().build();
+    public UserDtos.Detail resendInvitation(@PathVariable UUID userId) {
+        return userService.resendInvitation(userId);
     }
 
     @Operation(summary = "Remove a member; learning records are retained")

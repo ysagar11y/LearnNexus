@@ -18,7 +18,7 @@ import { formatDate, humanise, relativeTime } from '@/lib/format';
 import type { OrgUnitNode, Page, RoleCode, UserDetail, UserSummary } from '@/lib/types';
 import { Column, DataTable, Pager, StackedCell } from '@/components/DataTable';
 import { ErrorState, PageHeader } from '@/components/states';
-import { IconPeople, IconPlus, IconSearch } from '@/components/icons';
+import { IconCheck, IconPeople, IconPlus, IconSearch } from '@/components/icons';
 
 const ASSIGNABLE_ROLES: RoleCode[] = ['TENANT_ADMIN', 'AUTHOR', 'INSTRUCTOR', 'MANAGER', 'LEARNER'];
 
@@ -236,10 +236,11 @@ function InviteDialog({
   const [orgUnitId, setOrgUnitId] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const [inviteUrl, setInviteUrl] = useState<string | null>(null);
 
   const invite = useMutation({
     mutationFn: () =>
-      api.post('/users', {
+      api.post<UserDetail>('/users', {
         email: email.trim(),
         firstName: firstName.trim() || email.split('@')[0],
         lastName: lastName.trim() || null,
@@ -247,8 +248,9 @@ function InviteDialog({
         orgUnitId: orgUnitId || null,
         sendInvitation: true,
       }),
-    onSuccess: () => {
+    onSuccess: (created) => {
       setDone(true);
+      setInviteUrl(created.inviteUrl ?? null);
       setEmail('');
       setFirstName('');
       setLastName('');
@@ -275,6 +277,7 @@ function InviteDialog({
             onClick={() => {
               setError(null);
               setDone(false);
+              setInviteUrl(null);
               invite.mutate();
             }}
           >
@@ -291,10 +294,11 @@ function InviteDialog({
         </div>
       )}
       {done && (
-        <div style={{ marginBottom: 14 }}>
-          <Alert tone="success" title="Invitation sent" onDismiss={() => setDone(false)}>
+        <div className="stack stack-3" style={{ marginBottom: 14 }}>
+          <Alert tone="success" title="Invitation created" onDismiss={() => setDone(false)}>
             Invite another person, or close this dialog.
           </Alert>
+          {inviteUrl && <InviteLinkBox url={inviteUrl} />}
         </div>
       )}
 
@@ -368,6 +372,55 @@ function InviteDialog({
   );
 }
 
+/**
+ * Displayed whenever the API hands back a raw invite link (creating or
+ * resending an invitation). Mail may not be configured for this tenant, so
+ * this is often the only way an admin can actually get the link to someone.
+ */
+function InviteLinkBox({ url }: { url: string }) {
+  const [copied, setCopied] = useState(false);
+
+  return (
+    <div
+      className="surface"
+      style={{
+        padding: 12,
+        boxShadow: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+      }}
+    >
+      <span
+        style={{
+          flex: 1,
+          minWidth: 0,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          fontFamily: 'var(--font-mono)',
+          fontSize: 'var(--text-2xs)',
+          color: 'var(--muted-foreground)',
+        }}
+      >
+        {url}
+      </span>
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={async () => {
+          await navigator.clipboard.writeText(url);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        }}
+      >
+        {copied ? <IconCheck size={14} /> : null}
+        {copied ? 'Copied' : 'Copy link'}
+      </Button>
+    </div>
+  );
+}
+
 function PersonDrawer({
   userId,
   orgUnits,
@@ -409,8 +462,10 @@ function PersonDrawer({
       setError(caught instanceof ApiError ? caught.message : 'Could not change the status.'),
   });
 
+  const [resentInviteUrl, setResentInviteUrl] = useState<string | null>(null);
   const resend = useMutation({
-    mutationFn: () => api.post(`/users/${userId}/resend-invitation`),
+    mutationFn: () => api.post<UserDetail>(`/users/${userId}/resend-invitation`),
+    onSuccess: (result) => setResentInviteUrl(result.inviteUrl ?? null),
   });
 
   const move = useMutation({
@@ -442,7 +497,14 @@ function PersonDrawer({
             Close
           </Button>
           {data?.status === 'INVITED' && (
-            <Button variant="outline" loading={resend.isPending} onClick={() => resend.mutate()}>
+            <Button
+              variant="outline"
+              loading={resend.isPending}
+              onClick={() => {
+                setResentInviteUrl(null);
+                resend.mutate();
+              }}
+            >
               {resend.isSuccess ? 'Invitation sent' : 'Resend invitation'}
             </Button>
           )}
@@ -465,6 +527,8 @@ function PersonDrawer({
               {error}
             </Alert>
           )}
+
+          {resentInviteUrl && <InviteLinkBox url={resentInviteUrl} />}
 
           <div className="stat-grid">
             <div className="surface" style={{ padding: 14, boxShadow: 'none' }}>
