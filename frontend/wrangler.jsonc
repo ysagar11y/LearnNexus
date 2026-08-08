@@ -1,0 +1,14 @@
+{
+  // Fallback for accounts where Cloudflare's dashboard no longer offers the
+  // Pages flow: this deploys the built SPA as a static-assets Worker instead.
+  // There is no "main" entrypoint on purpose — nothing here runs server-side,
+  // the Worker only serves ./dist.
+  "name": "learnnexus",
+  "compatibility_date": "2026-08-01",
+  "assets": {
+    "directory": "./dist",
+    // Same job as public/_redirects does on Pages: serve index.html for
+    // unmatched paths so deep links and invite links reach React Router.
+    "not_found_handling": "single-page-application"
+  }
+}
